@@ -5,7 +5,7 @@ class Bedrooms(models.Model):
     bedroom_name = models.CharField(max_length=40)
     people_limit = models.IntegerField()
     people_amount = models.IntegerField()
-    photo = models.TextField()
+    photo = models.TextField(null=True, default=None)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(null=True, default=None)
     id_state = models.ForeignKey('States', models.DO_NOTHING, db_column='id_state')
@@ -13,8 +13,8 @@ class Bedrooms(models.Model):
 
 class Registers(models.Model):
     id_register = models.AutoField(primary_key=True)
-    check_in_date = models.DateField()
-    check_out_date = models.DateField()
+    check_in_date = models.DateTimeField()
+    check_out_date = models.DateTimeField()
     id_user = models.ForeignKey('Users', models.DO_NOTHING, db_column='id_user')
     id_bedroom = models.ForeignKey(Bedrooms, models.DO_NOTHING, db_column='id_bedroom')
 
@@ -59,5 +59,3 @@ class Credentials(models.Model):
     password = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
-
-

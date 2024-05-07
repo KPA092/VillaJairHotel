@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>{% block title %}Home{% endblock %}</title>
+		<link rel="stylesheet" href="{% static 'css/style.css' %}" />
+		<script src="https://kit.fontawesome.com/41bcea2ae3.js"></script>
+	</head>
+	<body id="body">
+		<!--Header-->
+		<header>
+			<div class="icon__menu">
+				<i class="fas fa-bars" id="btn_open"></i>
+			</div>
+			<div class="log_out_container" id="log_out_">
+				<div class="icon__menu log_out">
+					<i class="fa-solid fa-right-from-bracket"></i>
+				</div>
+				<h3>Salir</h3>
+			</div>
+		</header>
+		<!--Fin Header-->
+
+		<!--Menu lateral-->
+		<div class="menu__side" id="menu_side">
+			<div class="name__page">
+				<img src="{% static 'img/logo.png' %}" alt="Logo Villa Jair" />
+				<h4>Villa Jair</h4>
+			</div>
+
+			<div class="options__menu">
+				<a
+					href="{% url 'inicio' %}"
+					class="{% if section == 'inicio' %}selected{% endif %}"
+				>
+					<div class="option">
+						<i class="fas fa-home" title="Inicio"></i>
+						<h4>Inicio</h4>
+					</div>
+				</a>
+
+				<a
+					href="{% url 'registro' %}"
+					class="{% if section == 'registro' %}selected{% endif %}"
+				>
+					<div class="option">
+						<i class="fa-solid fa-address-card" title="Registro"></i>
+						<h4>Registro</h4>
+					</div>
+				</a>
+				<a href="#habitaciones">
+					<div class="option">
+						<i class="fa-solid fa-bed" title="Habitaciones"></i>
+						<h4>Habitaciones</h4>
+					</div>
+				</a>
+
+				<a href="#usuarios-activos">
+					<div class="option">
+						<i class="fa-solid fa-user-check" title="Usuario activos"></i>
+						<h4>Usuarios activos</h4>
+					</div>
+				</a>
+
+				<a href="#todos-los-usuarios">
+					<div class="option">
+						<i class="fa-solid fa-users" title="Todos los usuarios"></i>
+						<h4>Todos los usuarios</h4>
+					</div>
+				</a>
+			</div>
+		</div>
+		<!--Fin Menu lateral-->
+
+		<main>
+			{% block content %} {% endblock %}
+		</main>
+
+		<script src="{% static 'js/script.js' %}"></script>
+	</body>
+</html>
