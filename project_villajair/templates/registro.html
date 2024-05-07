@@ -9,44 +9,48 @@
 				{{ form.nit.label_tag }}
 				{{ form.nit }}
 			</div>
-			<hr>
 			<div class="input-box">
 				{{ form.full_name.label_tag }}
 				{{ form.full_name }}
 			</div>
-			<hr>
 			<div class="input-box">
 				{{ form.email.label_tag }}
 				{{ form.email }}
 			</div>
-			<hr>
-			<div class="input-box">
-				{{ form.phone_number.label_tag }}
-				{{ form.phone_number }}
+
+			<div class="column">
+				<div class="input-box">
+					{{ form.phone_number.label_tag }}
+					{{ form.phone_number }}
+				</div>
+				<div class="input-box">
+					{{ form.age.label_tag }}
+					{{ form.age }}
+				</div>
 			</div>
-			<div class="input-box">
-				{{ form.age.label_tag }}
-				{{ form.age }}
+
+			<div class="column">
+				<div class="input-box">
+					{{ form.country.label_tag }}
+					{{ form.country }}
+				</div>
+				<div class="input-box bedroom-field">
+					{{ form.bedroom.label_tag }}
+					{{ form.bedroom }}
+				</div>
 			</div>
-			<hr>
-			<div class="input-box">
-				{{ form.country.label_tag }}
-				{{ form.country }}
+
+			<div class="column">
+				<div class="input-box">
+					{{ form.check_in_date.label_tag }}
+					{{ form.check_in_date }}
+				</div>
+				<div class="input-box">
+					{{ form.check_out_date.label_tag }}
+					{{ form.check_out_date }}
+				</div>
 			</div>
-			<div class="input-box">
-				{{ form.bedroom.label_tag }}
-				{{ form.bedroom }}
-			</div>
-			<hr>
-			<div class="input-box">
-				{{ form.check_in_date.label_tag }}
-				{{ form.check_in_date }}
-			</div>
-			<div class="input-box">
-				{{ form.check_out_date.label_tag }}
-				{{ form.check_out_date }}
-			</div>
-			<hr>
+
 			<button type="submit" class="boton-registrar">Registrar</button>
 		</form>
 	</div>
