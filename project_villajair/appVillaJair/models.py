@@ -38,6 +38,9 @@ class Typestates(models.Model):
     id_type_state = models.AutoField(primary_key=True)
     type_state = models.CharField(max_length=20)
 
+    def __str__(self):
+        return self.type_state
+
    
 class Users(models.Model):
     id_user = models.AutoField(primary_key=True)
