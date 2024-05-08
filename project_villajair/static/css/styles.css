@@ -232,7 +232,6 @@ a.selected {
 	position: relative;
 	max-width: 800px;
 	width: 100%;
-	background: #8a4c8f;
 	padding: 25px;
 	border-radius: 8px;
 	box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
@@ -240,8 +239,8 @@ a.selected {
 
 .container h2 {
 	font-size: 1.5rem;
-	color: #333;
-	font-weight: 500;
+	color: #e2802d;
+	font-weight: 700;
 	text-align: center;
 }
 
@@ -255,7 +254,8 @@ a.selected {
 }
 
 .input-box label {
-	color: #333;
+	color: #e2802d;
+	font-weight: 600;
 }
 
 .form .input-box input,
@@ -265,11 +265,10 @@ a.selected {
 	width: 100%;
 	outline: none;
 	font-size: 0.7rem;
-	color: #707070;
 	margin-top: 8px;
-	border: 1px solid #ddd;
+	border: 1px solid #000000;
 	border-radius: 6px;
-	padding: 0 15px;
+	padding: 0 10px;
 }
 
 .form .column {
@@ -278,7 +277,7 @@ a.selected {
 }
 
 .form button {
-	height: 30px;
+	height: 40px;
 	width: 100%;
 	color: #fff;
 	font-size: 1rem;
@@ -286,13 +285,13 @@ a.selected {
 	margin-top: 30px;
 	cursor: pointer;
 	border-radius: 6px;
-	font-weight: 400;
+	font-weight: 600;
 	transition: all 0.2s ease;
-	background-color: rgb(130, 106, 251);
+	background-color: #e2802d;
 }
 
 .form button:hover {
-	background-color: rgb(88, 56, 250);
+	background-color: rgb(188, 113, 47);
 }
 /* Fin diseño del registro */
 

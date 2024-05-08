@@ -6,7 +6,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>{% block title %}Home{% endblock %}</title>
-		<link rel="stylesheet" href="{% static 'css/style.css' %}" />
+		<link rel="stylesheet" href="{% static 'css/styles.css' %}" />
 		<script src="https://kit.fontawesome.com/41bcea2ae3.js"></script>
 	</head>
 	<body id="body">
@@ -51,21 +51,31 @@
 						<h4>Registro</h4>
 					</div>
 				</a>
-				<a href="#habitaciones">
+
+				<a
+					href="{% url 'habitaciones' %}"
+					class="{% if section == 'habitaciones' %}selected{% endif %}"
+				>
 					<div class="option">
 						<i class="fa-solid fa-bed" title="Habitaciones"></i>
 						<h4>Habitaciones</h4>
 					</div>
 				</a>
 
-				<a href="#usuarios-activos">
+				<a
+					href="{% url 'usuariosActivos' %}"
+					class="{% if section == 'usuariosActivos' %}selected{% endif %}"
+				>
 					<div class="option">
 						<i class="fa-solid fa-user-check" title="Usuario activos"></i>
 						<h4>Usuarios activos</h4>
 					</div>
 				</a>
 
-				<a href="#todos-los-usuarios">
+				<a
+					href="{% url 'todosLosUsuarios' %}"
+					class="{% if section == 'todosLosUsuarios' %}selected{% endif %}"
+				>
 					<div class="option">
 						<i class="fa-solid fa-users" title="Todos los usuarios"></i>
 						<h4>Todos los usuarios</h4>

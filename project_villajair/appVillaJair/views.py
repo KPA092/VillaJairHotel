@@ -16,5 +16,13 @@ def registro(request):
 
     else:
         form =  UserRegistrationForm()
-    
     return render(request, 'registro.html', {'form': form, 'section': 'registro'})
+
+def habitaciones(request):
+    return render(request, 'habitaciones.html', {'section': 'habitaciones'})
+
+def usuariosActivos(request):
+    return render(request, 'usuariosActivos.html', {'section': 'usuariosActivos'})
+
+def todosLosUsuarios(request):
+    return render(request, 'todosLosUsuarios.html', {'section': 'todosLosUsuarios'})

@@ -2,20 +2,37 @@ from django import forms
 from .models import Users, Bedrooms, Registers
 
 class UserRegistrationForm(forms.ModelForm):
-    check_in_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))
-    check_out_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))
-
+    check_in_date = forms.DateTimeField(label='Fecha de entrada', widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))
+    check_out_date = forms.DateTimeField(label='Fecha de salida', widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))
 
     class Meta:
         model = Users
         fields = ['nit', 'full_name', 'email', 'phone_number', 'country', 'age']
+        labels = {
+            'nit': 'Número de cédula',
+            'full_name': 'Nombre completo',
+            'email': 'Correo electrónico',
+            'phone_number': 'Número de teléfono',
+            'country': 'País',
+            'age': 'Edad',
+        }
 
-    bedroom = forms.ChoiceField(choices=[])
+    bedroom = forms.ChoiceField(label='Habitación', choices=[])
 
     def __init__(self, *args, **kwargs):
         super(UserRegistrationForm, self).__init__(*args, **kwargs)
+        placeholders = {
+            'nit': 'Ingrese su número de cédula',
+            'full_name': 'Ingrese su nombre completo',
+            'email': 'Ingrese su correo electrónico',
+            'phone_number': 'Ingrese su número de teléfono',
+            'country': 'Ingrese su país',
+            'age': 'Ingrese su edad',
+        }
+        for field in self.fields:
+            self.fields[field].widget.attrs['placeholder'] = placeholders.get(field, '')
+
         self.fields['phone_number'].widget.attrs.update({'type': 'tel'})
-        self.fields['country'].widget.attrs.update({'placeholder': 'Enter your country'})
         self.fields['age'].widget.attrs.update({'min': '18'})
 
         # Obtener solo los nombres de las habitaciones para el campo desplegable
