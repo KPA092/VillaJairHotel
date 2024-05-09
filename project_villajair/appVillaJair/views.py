@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from .forms import UserRegistrationForm, CustomAuthenticationForm
+from .forms import UserRegistrationForm
+from .models import Bedrooms
 from django.contrib.auth import logout as auth_logout
 from django.http import HttpResponseRedirect
 from django.contrib.auth import login as auth_login
@@ -28,7 +29,8 @@ def registro(request):
     return render(request, 'registro.html', {'form': form, 'section': 'registro'})
 
 def habitaciones(request):
-    return render(request, 'habitaciones.html', {'section': 'habitaciones'})
+    habitaciones = Bedrooms.objects.all()
+    return render(request, 'habitaciones.html', {'habitaciones': habitaciones})
 
 def usuariosActivos(request):
     return render(request, 'usuariosActivos.html', {'section': 'usuariosActivos'})

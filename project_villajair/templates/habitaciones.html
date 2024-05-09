@@ -1,7 +1,14 @@
 {% extends 'base.html' %} {% block title %}Habitaciones{% endblock %} {% block content%}
 
 <section id="habitaciones" class="seccion">
-	<h1>Aqui habitaciones</h1>
+    {% for habitacion in habitaciones %}
+    <div class="habitacion">
+        <h2>{{ habitacion.bedroom_name }}</h2>
+        <img src="{{ habitacion.foto.url }}" alt="{{ habitacion.nombre }}">
+        <p>Estado: {{ habitacion.id_state.state_name}}</p>
+    </div>
+    {% endfor %}
 </section>
+
 
 {% endblock %}

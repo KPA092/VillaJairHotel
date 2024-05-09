@@ -1,14 +1,26 @@
 from django.db import models
+from django.contrib.auth.models import User
 
+class CustomUser(User):
+    class Meta:
+        proxy = True
+
+    def __str__(self):
+        return self.username
+
+User._meta.get_field('email')._unique = True
+
+    
 class Bedrooms(models.Model):
     id_bedroom = models.AutoField(primary_key=True)
     bedroom_name = models.CharField(max_length=40)
     people_limit = models.IntegerField()
     people_amount = models.IntegerField()
-    photo = models.TextField(null=True, default=None)
+    photo = models.ImageField(upload_to="imagenes", null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(null=True, default=None)
     id_state = models.ForeignKey('States', models.DO_NOTHING, db_column='id_state')
+
 
 
 class Registers(models.Model):
@@ -46,7 +58,7 @@ class Users(models.Model):
     id_user = models.AutoField(primary_key=True)
     nit = models.BigIntegerField(unique=True)
     full_name = models.CharField(max_length=150)
-    email = models.CharField(max_length=150)
+    email = models.CharField(unique=True)
     phone_number = models.BigIntegerField()
     country = models.CharField(max_length=40)
     age = models.IntegerField()
@@ -56,9 +68,4 @@ class Users(models.Model):
     id_bedroom = models.ForeignKey(Bedrooms, models.DO_NOTHING, db_column='id_bedroom', blank=True, null=True)
     id_role = models.ForeignKey(Role, models.DO_NOTHING, db_column='id_role')
 
-class Credentials(models.Model):
-    id_credential = models.AutoField(primary_key=True)
-    username = models.CharField(max_length=100, unique=True)
-    password = models.CharField(max_length=100)
-    created_at = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(Users, on_delete=models.CASCADE)
+
