@@ -1,6 +1,6 @@
-from django.shortcuts import render
-from .forms import UserRegistrationForm
-from .models import Bedrooms
+from django.shortcuts import render, redirect
+from .forms import UserRegistrationForm,CustomAuthenticationForm
+from .models import Bedrooms, States
 from django.contrib.auth import logout as auth_logout
 from django.http import HttpResponseRedirect
 from django.contrib.auth import login as auth_login
@@ -30,7 +30,25 @@ def registro(request):
 
 def habitaciones(request):
     habitaciones = Bedrooms.objects.all()
-    return render(request, 'habitaciones.html', {'habitaciones': habitaciones})
+    estados = States.objects.filter(id_type_state=2)
+    
+    return render(request, 'habitaciones.html', {'habitaciones': habitaciones, 'estados': estados})
+
+def guardar_cambios(request):
+    if request.method == 'POST':
+        # Obtener el ID de la habitación y el nuevo estado enviado desde el formulario
+        habitacion_id = request.POST.get('habitacion_id')
+        nuevo_estado_id = request.POST.get('estado_habitacion')
+        
+        # Obtener la habitación y el nuevo estado de la base de datos
+        habitacion = Bedrooms.objects.get(id_bedroom=habitacion_id)
+        nuevo_estado = States.objects.get(id_state=nuevo_estado_id)
+        
+        # Actualizar el estado de la habitación
+        habitacion.id_state = nuevo_estado
+        habitacion.save()
+        
+    return redirect('habitaciones')
 
 def usuariosActivos(request):
     return render(request, 'usuariosActivos.html', {'section': 'usuariosActivos'})

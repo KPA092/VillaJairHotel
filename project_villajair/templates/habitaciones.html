@@ -1,14 +1,63 @@
 {% extends 'base.html' %} {% block title %}Habitaciones{% endblock %} {% block content%}
 
 <section id="habitaciones" class="seccion">
-    {% for habitacion in habitaciones %}
-    <div class="habitacion">
-        <h2>{{ habitacion.bedroom_name }}</h2>
-        <img src="{{ habitacion.foto.url }}" alt="{{ habitacion.nombre }}">
-        <p>Estado: {{ habitacion.id_state.state_name}}</p>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 mb-4">
+        {% for habitacion in habitaciones %}
+        <div class="col">
+            <div class="habitacion card">
+                <h2 class="card-header text-center ">{{ habitacion.bedroom_name }}</h2>
+                <div class="habitacion-imagen">
+                    <img src="{{ habitacion.photo.url }}" alt="{{ habitacion.nombre }}" class="card-img-top"
+                        style="max-height: 210px;">
+                </div>
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <p class="estado {{ habitacion.id_state.state_name|lower }} text-center mb-0"
+                        data-habitacion-id="{{ habitacion.id_bedroom }}" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal">{{ habitacion.id_state.state_name }}</p>
+
+                    <a href="#" class="btn btn-primary mt-2 " data-habitacion-id="{{ habitacion.id_bedroom}}">Ver
+                        Habitación</a>
+
+                </div>
+            </div>
+        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
+
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modificar estado</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post" action="">
+                    {% csrf_token %}
+                    <input type="hidden" id="habitacionIdInput" name="habitacion_id">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="estadoHabitacion">Seleccionar estado:</label>
+                            <select class="form-control" id="estadoHabitacion" name="estado_habitacion">
+                                {% for estado in estados %}
+                                <option value="{{ estado.id }}">{{ estado.state_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary guardar-cambios">Guardar cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 </section>
 
 
 {% endblock %}
+

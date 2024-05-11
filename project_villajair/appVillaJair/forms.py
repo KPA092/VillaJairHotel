@@ -1,5 +1,5 @@
 from django import forms
-from .models import Users, Bedrooms, Registers
+from .models import Users, Bedrooms, Registers, States
 from django.contrib.auth.forms import AuthenticationForm
 
 
@@ -51,9 +51,11 @@ class UserRegistrationForm(forms.ModelForm):
         check_out_date = self.cleaned_data['check_out_date']
         Registers.objects.create(id_user=user, id_bedroom=bedroom, check_in_date=check_in_date, check_out_date=check_out_date)
         return user
-    
+
+#login
 class CustomAuthenticationForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['username'].widget.attrs.update({'class': 'input'})
         self.fields['password'].widget.attrs.update({'class': 'input'})
+
