@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .forms import UserRegistrationForm
+from .forms import UserRegistrationForm, CustomAuthenticationForm
 from .models import Bedrooms
 from django.contrib.auth import logout as auth_logout
 from django.http import HttpResponseRedirect
@@ -7,7 +7,6 @@ from django.contrib.auth import login as auth_login
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-
 
 
 @login_required
@@ -38,9 +37,6 @@ def usuariosActivos(request):
 def todosLosUsuarios(request):
     return render(request, 'todosLosUsuarios.html', {'section': 'todosLosUsuarios'})
 
-    return render(request, 'registro.html', {'form': form, 'section': 'registro'})
-
-
 def login(request):
     if request.method == 'POST':
         form = CustomAuthenticationForm(request, data=request.POST)
@@ -55,9 +51,9 @@ def login(request):
                     pass
                 else:
                     request.session['login_attempts'] = request.session.get('login_attempts', 0) + 1
-           
+
             form = CustomAuthenticationForm()
-         
+
             messages.error(request, "Credenciales incorrectas. Inténtalo de nuevo.")
             return render(request, 'login.html', {'form': form})
     else:
