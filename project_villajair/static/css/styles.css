@@ -30,7 +30,8 @@ header {
 	z-index: 200;
 	justify-content: space-between;
 }
-header a{
+
+header a {
 	color: #000;
 }
 
@@ -61,6 +62,7 @@ header a{
 	font-size: 20px;
 	position: absolute;
 }
+
 /* Fin menu principal */
 
 /* Menu lateral */
@@ -152,6 +154,7 @@ a.selected {
 	top: 10%;
 	left: -30px;
 }
+
 /* Fin menu lateral */
 
 /*Clases para usar en JavaScript*/
@@ -166,10 +169,10 @@ a.selected {
 .log_out_container_move {
 	right: 16%;
 }
+
 /* Fin clases para usar JavaScript */
 
 /*Seccion inicio*/
-/* Imagen y texto bienvenida */
 .imagen_fondo {
 	position: relative;
 	background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
@@ -296,10 +299,74 @@ a.selected {
 .form button:hover {
 	background-color: rgb(188, 113, 47);
 }
+
 /* Fin diseño del registro */
+
+/*Diseño de habitaciones*/
+
+.habitacion h2 {
+	font-size: 20px;
+	text-align: center;
+	color: #e2802d;
+	border-bottom: 1px solid #e2802d;
+}
+ .card-header{
+	background-color: #fff;
+ }
+.card-body{
+	padding:0 20px 12px;
+
+}
+.estado {
+	font-style: italic;
+	margin-top: 10px;
+	padding: 5px;
+	border-radius: 5px;
+	font-weight: bold;
+	text-align: center;
+	color: #ffffff;
+	cursor: pointer;
+}
+
+.estado-icono i{
+    position: absolute;
+    top: 62%;
+    right: 5%;
+    transform: translateY(-50%);
+	color: #fff;
+}
+
+.disponible {
+	background-color: lightgreen;
+}
+
+.mantenimiento {
+	background-color: lightsalmon;
+}
+
+.ocupado{
+	background-color:  lightcoral;
+}
+
+.ver-habitacion {
+    display: block;
+    margin-top: 10px;
+    text-align: center;
+    background-color: #1275b8;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.ver-habitacion:hover {
+    background-color: #0056b3;
+}
+
 
 /* Responsive */
 @media screen and (max-width: 760px) {
+
 	/* Responsive Menu */
 	.body_move {
 		margin-left: 0px;
@@ -313,6 +380,7 @@ a.selected {
 	header {
 		justify-content: space-between;
 	}
+
 	.log_out_container {
 		right: 0;
 		margin-right: 0;
@@ -321,12 +389,14 @@ a.selected {
 	.log_out_container_move {
 		right: 20%;
 	}
+
 	/* Fin menu */
 
 	/* Responsive Home */
 	.banner {
 		padding-top: 50px;
 	}
+
 	.titulo {
 		font-size: 2em;
 		padding: 0 20px;
@@ -343,12 +413,14 @@ a.selected {
 		text-align: center;
 		padding: 0 30px;
 	}
+
 	/* Fin Home */
 
 	/* Responsive registro */
 	.form .column {
 		flex-wrap: wrap;
 	}
+
 	/* Fin registro */
 }
 
@@ -357,4 +429,5 @@ a.selected {
 		right: 28%;
 	}
 }
+
 /* Fin responsive */
