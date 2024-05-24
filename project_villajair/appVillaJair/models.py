@@ -10,7 +10,7 @@ class CustomUser(User):
 
 User._meta.get_field('email')._unique = True
 
-    
+
 class Bedrooms(models.Model):
     id_bedroom = models.AutoField(primary_key=True)
     bedroom_name = models.CharField(max_length=40)
@@ -53,7 +53,7 @@ class Typestates(models.Model):
     def __str__(self):
         return self.type_state
 
-   
+
 class Users(models.Model):
     id_user = models.AutoField(primary_key=True)
     nit = models.BigIntegerField(unique=True)
@@ -67,5 +67,3 @@ class Users(models.Model):
     id_state = models.ForeignKey(States, models.DO_NOTHING, db_column='id_state', blank=True, null=True)
     id_bedroom = models.ForeignKey(Bedrooms, models.DO_NOTHING, db_column='id_bedroom', blank=True, null=True)
     id_role = models.ForeignKey(Role, models.DO_NOTHING, db_column='id_role')
-
-

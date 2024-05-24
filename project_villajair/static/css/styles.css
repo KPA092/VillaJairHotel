@@ -233,7 +233,7 @@ a.selected {
 	justify-content: center;
 }
 
-.container {
+.container_registro {
 	align-items: center;
 	position: relative;
 	max-width: 800px;
@@ -243,14 +243,14 @@ a.selected {
 	box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 
-.container h2 {
+.container_registro h2 {
 	font-size: 1.5rem;
 	color: #e2802d;
 	font-weight: 700;
 	text-align: center;
 }
 
-.container .form {
+.container_registro .form {
 	margin-top: 10px;
 }
 
@@ -310,12 +310,11 @@ a.selected {
 	color: #e2802d;
 	border-bottom: 1px solid #e2802d;
 }
- .card-header{
+.card-header {
 	background-color: #fff;
- }
-.card-body{
-	padding:0 20px 12px;
-
+}
+.card-body {
+	padding: 0 20px 12px;
 }
 .estado {
 	font-style: italic;
@@ -328,11 +327,11 @@ a.selected {
 	cursor: pointer;
 }
 
-.estado-icono i{
-    position: absolute;
-    top: 62%;
-    right: 5%;
-    transform: translateY(-50%);
+.estado-icono i {
+	position: absolute;
+	top: 62%;
+	right: 5%;
+	transform: translateY(-50%);
 	color: #fff;
 }
 
@@ -344,29 +343,53 @@ a.selected {
 	background-color: lightsalmon;
 }
 
-.ocupado{
-	background-color:  lightcoral;
+.ocupado {
+	background-color: lightcoral;
 }
 
 .ver-habitacion {
-    display: block;
-    margin-top: 10px;
-    text-align: center;
-    background-color: #1275b8;
-    color: #fff;
-    padding: 5px 10px;
-    border-radius: 5px;
-    text-decoration: none;
+	display: block;
+	margin-top: 10px;
+	text-align: center;
+	background-color: #1275b8;
+	color: #fff;
+	padding: 5px 10px;
+	border-radius: 5px;
+	text-decoration: none;
 }
 
 .ver-habitacion:hover {
-    background-color: #0056b3;
+	background-color: #0056b3;
 }
 
+/* Diseño datatable */
+.centered {
+	text-align: center !important;
+	vertical-align: middle !important;
+}
+
+.btn-action {
+	display: flex;
+	gap: 10px;
+	justify-content: center;
+}
+
+.btn-action .btn {
+	width: 45px;
+	height: 40px;
+	margin-bottom: 10px;
+}
+
+.descargar {
+	display: flex;
+	justify-content: center;
+	margin-top: 10px;
+}
+
+/* Fin diseño datable */
 
 /* Responsive */
 @media screen and (max-width: 760px) {
-
 	/* Responsive Menu */
 	.body_move {
 		margin-left: 0px;
