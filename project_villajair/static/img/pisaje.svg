@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 1280 832">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: url(#Degradado_sin_nombre_12);
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5, .cls-6, .cls-7 {
+        stroke-width: 0px;
+      }
+
+      .cls-2 {
+        fill: url(#Degradado_sin_nombre_10);
+      }
+
+      .cls-8 {
+        filter: url(#luminosity-noclip-2);
+      }
+
+      .cls-9 {
+        mask: url(#mask);
+      }
+
+      .cls-10 {
+        filter: url(#luminosity-noclip);
+      }
+
+      .cls-3 {
+        fill: url(#Degradado_sin_nombre_10-2);
+      }
+
+      .cls-4 {
+        fill: url(#Degradado_sin_nombre_10-5);
+        filter: url(#drop-shadow-3);
+      }
+
+      .cls-5 {
+        fill: url(#Degradado_sin_nombre_10-3);
+        filter: url(#drop-shadow-1);
+      }
+
+      .cls-6 {
+        fill: url(#Degradado_sin_nombre_10-4);
+        filter: url(#drop-shadow-2);
+      }
+
+      .cls-11 {
+        mix-blend-mode: screen;
+        opacity: .3;
+      }
+
+      .cls-12 {
+        isolation: isolate;
+      }
+
+      .cls-7 {
+        fill: #0b4f45;
+      }
+
+      .cls-13 {
+        mask: url(#mask-1);
+      }
+    </style>
+    <linearGradient id="Degradado_sin_nombre_10" data-name="Degradado sin nombre 10" x1="640.6" y1="834.6" x2="639.2" y2="-143.5" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#199b78"/>
+      <stop offset=".2" stop-color="#117d67"/>
+      <stop offset=".4" stop-color="#0a5d56"/>
+      <stop offset=".6" stop-color="#04464a"/>
+      <stop offset=".8" stop-color="#013842"/>
+      <stop offset="1" stop-color="#003440"/>
+    </linearGradient>
+    <filter id="luminosity-noclip" x="-2.2" y="76.6" width="1284.2" height="757.4" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feFlood flood-color="#fff" result="bg"/>
+      <feBlend in="SourceGraphic" in2="bg"/>
+    </filter>
+    <mask id="mask" x="-2.2" y="76.6" width="1284.2" height="757.4" maskUnits="userSpaceOnUse">
+      <g class="cls-10">
+        <image width="5351" height="3156" transform="translate(-2.2 76.6) scale(.2)" xlink:href="pisaje-1.png"/>
+      </g>
+    </mask>
+    <linearGradient id="Degradado_sin_nombre_12" data-name="Degradado sin nombre 12" x1="640.3" y1="834.4" x2="639.1" y2="-50.3" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#199b78"/>
+      <stop offset=".1" stop-color="#117d67"/>
+      <stop offset=".3" stop-color="#0a5d56"/>
+      <stop offset=".5" stop-color="#04464a"/>
+      <stop offset=".7" stop-color="#013842"/>
+      <stop offset=".8" stop-color="#003440"/>
+    </linearGradient>
+    <linearGradient id="Degradado_sin_nombre_10-2" data-name="Degradado sin nombre 10" x1="1073.4" y1="833.4" x2="1072.6" y2="212.8" xlink:href="#Degradado_sin_nombre_10"/>
+    <filter id="luminosity-noclip-2" x="864.2" y="301" width="417.8" height="533" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feFlood flood-color="#fff" result="bg"/>
+      <feBlend in="SourceGraphic" in2="bg"/>
+    </filter>
+    <mask id="mask-1" x="864.2" y="301" width="417.8" height="533" maskUnits="userSpaceOnUse">
+      <g class="cls-8">
+        <image width="1741" height="2221" transform="translate(864.2 301) scale(.2)" xlink:href="pisaje-2.png"/>
+      </g>
+    </mask>
+    <linearGradient id="Degradado_sin_nombre_10-3" data-name="Degradado sin nombre 10" x1="911.6" y1="833.9" x2="910.5" y2="18.4" xlink:href="#Degradado_sin_nombre_10"/>
+    <filter id="drop-shadow-1" filterUnits="userSpaceOnUse">
+      <feOffset dx="21" dy="1"/>
+      <feGaussianBlur result="blur" stdDeviation="29"/>
+      <feFlood flood-color="#000" flood-opacity=".8"/>
+      <feComposite in2="blur" operator="in"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <linearGradient id="Degradado_sin_nombre_10-4" data-name="Degradado sin nombre 10" x1="220.1" y1="833.3" x2="219.4" y2="268.3" xlink:href="#Degradado_sin_nombre_10"/>
+    <filter id="drop-shadow-2" filterUnits="userSpaceOnUse">
+      <feOffset dx="24" dy="1"/>
+      <feGaussianBlur result="blur-2" stdDeviation="20"/>
+      <feFlood flood-color="#000" flood-opacity=".8"/>
+      <feComposite in2="blur-2" operator="in"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <linearGradient id="Degradado_sin_nombre_10-5" data-name="Degradado sin nombre 10" x1="378.3" y1="833.6" x2="377.4" y2="159.5" xlink:href="#Degradado_sin_nombre_10"/>
+    <filter id="drop-shadow-3" filterUnits="userSpaceOnUse">
+      <feOffset dx="24" dy="1"/>
+      <feGaussianBlur result="blur-3" stdDeviation="20"/>
+      <feFlood flood-color="#000" flood-opacity=".8"/>
+      <feComposite in2="blur-3" operator="in"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g class="cls-12">
+    <g id="Capa_1" data-name="Capa 1">
+      <rect class="cls-2" width="1280" height="832"/>
+    </g>
+    <g id="Capa_6" data-name="Capa 6">
+      <g class="cls-9">
+        <polygon class="cls-1" points="778.5 373.6 608.9 78.7 419.1 507.5 231.5 219.5 195.8 235.2 151.2 150.3 55.7 380.3 0 293.1 0 832 1280 832 1280 326.7 1178.2 427.2 1073.2 257.9 939.3 360.2 835.3 240.9 778.5 373.6"/>
+      </g>
+    </g>
+    <g id="Capa_2" data-name="Capa 2">
+      <g>
+        <polygon class="cls-3" points="1280 482.2 1176.1 303.1 866.3 832 1280 832 1280 482.2"/>
+        <g class="cls-13">
+          <g class="cls-11">
+            <polygon class="cls-7" points="1280 482.2 1176.1 303.1 866.3 832 1280 832 1280 482.2"/>
+          </g>
+        </g>
+      </g>
+    </g>
+    <g id="Capa_3" data-name="Capa 3">
+      <polygon class="cls-5" points="1280 832 968.1 250.9 936.7 284.7 866.3 137.3 767.5 467.2 717.3 427 543.2 832 1280 832 1280 832"/>
+    </g>
+    <g id="Capa_5" data-name="Capa 5">
+      <polygon class="cls-6" points="440.3 832 158.2 350.7 0 695.1 0 832 440.3 832"/>
+    </g>
+    <g id="Capa_4" data-name="Capa 4">
+      <polygon class="cls-4" points="700.9 832 523.5 508.7 478.2 530 312.3 257.9 55.7 832 700.9 832"/>
+    </g>
+  </g>
+</svg>

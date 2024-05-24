@@ -1,14 +1,22 @@
 {% extends 'base.html' %} {% block title %}Registro{% endblock %} {% block content%}
+{% load static %}
 
 <section id="registro" class="seccion">
 	<div class="container_registro">
 		<h2>Formulario de Registro</h2>
-		<form method="post" class="form">
+		<form method="post" action="{% url 'registro' %}" id="registroForm" class="form">
 			{% csrf_token %}
-			<div class="input-box">
-				{{ form.nit.label_tag }}
-				{{ form.nit }}
+			<div class="column">
+				<div class="input-box bedroom-field">
+					{{ form.document_type.label_tag }}
+					{{ form.document_type }}
+				</div>
+				<div class="input-box">
+					{{ form.nit.label_tag }}
+					{{ form.nit }}
+				</div>
 			</div>
+
 			<div class="input-box">
 				{{ form.full_name.label_tag }}
 				{{ form.full_name }}
@@ -55,5 +63,7 @@
 		</form>
 	</div>
 </section>
+
+<script src="{% static 'js/registro.js' %}"></script>
 
 {% endblock %}
