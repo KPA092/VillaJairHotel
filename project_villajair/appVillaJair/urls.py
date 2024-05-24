@@ -2,14 +2,18 @@ from . import views
 from django.urls import path
 from django.contrib.auth import views as auth_views
 
+
 urlpatterns = [
     path('inicio/', views.inicio, name='inicio'),
     path('registro/', views.registro, name='registro'),
     path('habitaciones/', views.habitaciones, name='habitaciones'),
+    path('crear_habitacion/', views.crear_habitacion, name='crear_habitacion'),
+
     path('usuariosActivos/', views.usuariosActivos, name='usuariosActivos'),
     path('todosLosUsuarios/', views.todosLosUsuarios, name='todosLosUsuarios'),
     path('', views.login, name='login'),    
     path('logout/', views.logout, name='logout'),
+    
     #Forgot password
     path('reset_password/', auth_views.PasswordResetView.as_view(), name='reset_password'),
     path('reset_password_sent/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
@@ -18,6 +22,12 @@ urlpatterns = [
 	
     #Habitaciones
     path('guardar_cambios/', views.guardar_cambios, name='guardar_cambios'),
+    path('eliminar_habitacion/<int:habitacion_id>/', views.eliminar_habitacion, name='eliminar_habitacion'),
+    path('detalle_habitacion/<int:habitacion_id>/', views.detalle_habitacion, name='detalle_habitacion'),
+    path('detalle_habitacionJson/<int:habitacion_id>/', views.detalle_habitacionJson, name='detalle_habitacionJson'),
+    path('update_habitacion/<int:habitacion_id>/', views.update_habitacion, name='update_habitacion'),
+
+
 
     
 	

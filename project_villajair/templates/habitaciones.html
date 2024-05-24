@@ -1,32 +1,56 @@
 {% extends 'base.html' %} {% block title %}Habitaciones{% endblock %} {% block content%}
+{% load static %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<!-- Menú -->
+<nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid mt-3  px-4">
+        <form class="d-flex">
+            <input class="form-control me-2 custom-input" type="search" id="searchInput" placeholder="Buscar"
+                aria-label="Search">
+        </form>
+        <div class="d-flex">
+            <button class="btn btn-primary custom-btn px-5 py-2" data-bs-toggle="modal" data-bs-target="#modalCreate"
+                id="crearHabitacion">Crear</button>
+
+        </div>
+    </div>
+</nav>
 
 <section id="habitaciones" class="seccion">
+    {% if habitaciones %}
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 mb-4">
         {% for habitacion in habitaciones %}
         <div class="col">
             <div class="habitacion card">
                 <h2 class="card-header text-center ">{{ habitacion.bedroom_name }}</h2>
-                <div class="habitacion-imagen">
+                <div class="habitacion-imagen" data-habitacion-id="{{ habitacion.id_bedroom }}">
                     <img src="{{ habitacion.photo.url }}" alt="{{ habitacion.nombre }}" class="card-img-top"
-                        style="max-height: 210px;">
+                        style="height: 200px;">
+                    <p class="ver-habitacion-text">Ver Habitación</p>
                 </div>
                 <div class="card-body d-flex flex-column justify-content-between">
                     <p class="estado {{ habitacion.id_state.state_name|lower }} text-center mb-0"
                         data-habitacion-id="{{ habitacion.id_bedroom }}" data-bs-toggle="modal"
                         data-bs-target="#exampleModal">{{ habitacion.id_state.state_name }}</p>
 
-                    <a href="#" class="btn btn-primary mt-2 " data-habitacion-id="{{ habitacion.id_bedroom}}">Ver
-                        Habitación</a>
+
 
                 </div>
             </div>
         </div>
         {% endfor %}
     </div>
+    {% else %}
+    <div class="alert alert-info text-center" role="alert">
+        No hay habitaciones disponibles.
+    </div>
+        {% endif %}
 
 
-
-    <!-- Modal -->
+    <!-- Modal estado-->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -34,7 +58,7 @@
                     <h5 class="modal-title" id="exampleModalLabel">Modificar estado</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="post" action="">
+                <form method="post" id="estadoForm">
                     {% csrf_token %}
                     <input type="hidden" id="habitacionIdInput" name="habitacion_id">
                     <div class="modal-body">
@@ -42,13 +66,13 @@
                             <label for="estadoHabitacion">Seleccionar estado:</label>
                             <select class="form-control" id="estadoHabitacion" name="estado_habitacion">
                                 {% for estado in estados %}
-                                <option value="{{ estado.id }}">{{ estado.state_name }}</option>
+                                <option value="{{ estado.id_state }}">{{ estado.state_name }}</option>
                                 {% endfor %}
                             </select>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                         <button type="submit" class="btn btn-primary guardar-cambios">Guardar cambios</button>
                     </div>
                 </form>
@@ -56,8 +80,52 @@
         </div>
     </div>
 
+    <!-- Modal de creación de habitación -->
+    <div class="modal fade" id="modalCreate" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Crear Habitación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post" id="crearHabitacionForm" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <!-- Input para el nombre de la habitación -->
+                        <div class="form-group">
+                            <label for="nombreHabitacion">Nombre de la habitación:</label>
+                            <input type="text" class="form-control" id="nombreHabitacion" name="nombre_habitacion"
+                                required>
+                        </div>
+                        <!-- Input para el límite de personas -->
+                        <div class="form-group">
+                            <label for="limitePersonas">Límite de personas:</label>
+                            <input type="number" class="form-control" id="limitePersonas" name="limite_personas"
+                                required>
+                        </div>
+                        <!-- Input para subir una foto -->
+                        <div class="form-group">
+                            <label for="fotoHabitacion">Foto de la habitación:</label>
+                            <input type="file" class="form-control" id="fotoHabitacion" name="foto_habitacion"
+                                accept="image/*" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary guardar-cambios">Crear Habitación</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 </section>
+<script src="{% static 'js/habitacion.js' %}"></script>
+
+
+
+
+
 
 
 {% endblock %}
-
