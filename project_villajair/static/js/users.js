@@ -336,6 +336,10 @@ function viewHistory(userId) {
 	window.location.href = `/historial/?user_id=${userId}`
 }
 
+function createRegister(userId) {
+	window.location.href = `/create_register/?user_id=${userId}`
+}
+
 document
 	.getElementById('editUserForm')
 	.addEventListener('submit', async function (event) {

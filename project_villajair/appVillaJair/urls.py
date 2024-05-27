@@ -9,7 +9,9 @@ urlpatterns = [
     path('habitaciones/', views.habitaciones, name='habitaciones'),
     path('crear_habitacion/', views.crear_habitacion, name='crear_habitacion'),
 
+    # -----------------------------------------URLS DE TODOS LOS USUARIOS ACTIVOS-----------------------------------------------
     path('usuariosActivos/', views.usuariosActivos, name='usuariosActivos'),
+	path('listarUsuariosActivos/', views.listarUsuariosActivos, name='listarUsuariosActivos'),
 
     # -----------------------------------------URLS DE TODOS LOS USUARIOS-----------------------------------------------
     path('todosLosUsuarios/', views.todosLosUsuarios, name='todosLosUsuarios'),
@@ -21,6 +23,7 @@ urlpatterns = [
     #-----------------------------------------------HISTORIAL DE REGISTROS----------------------------------------------
 	path('historial/', views.historial, name='historial'),
     path('listarRegistros/<int:user_id>', views.listarRegistros, name='listarRegistros'),
+    path('crear_registro/', views.crear_registro, name='crear_registro'),
 
     # -----------------------------------------------DESCARGAR PDF------------------------------------------------------
 	path('descargar_pdf/', views.download_pdf, name='download_pdf'),

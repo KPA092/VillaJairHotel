@@ -11,6 +11,18 @@
 <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
+
+<nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid mt-3  px-4">
+		<div class="row">
+        <div class="d-flex-end">
+            <button class="btn btn-primary custom-btn px-5 py-2" data-bs-toggle="modal" data-bs-target="#modalCreateRegister"
+                id="crearRegistro">Agregar Registro</button>
+			</div>
+        </div>
+    </div>
+</nav>
+
 <section id="historial" class="seccion">
 	<div class="container mt-4">
 		<div class="row">
@@ -34,8 +46,53 @@
 			</div>
 		</div>
 	</div>
+
+	<div class="modal fade" id="modalCreateRegister" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Agregar Registro</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+				<form method="post" action="{% url 'crear_registro' %}" id="crearRegistroForm" enctype="multipart/form-data">
+                    {% csrf_token %}
+					<input type="hidden" id="user_id" name="user_id" value="{{ user_id }}">
+
+                    <div class="modal-body">
+                        <!-- Input para el nombre de la habitación -->
+                        <div class="mb-3">
+                            <label for="nombreHabitacion">Fecha entrada:</label>
+							<input type="datetime-local" class="form-control" id="check_in_date" name="check_in_date" required>
+
+                        </div>
+                        <!-- Input para el límite de personas -->
+                        <div class="mb-3">
+                            <label for="limitePersonas">Fecha salida:</label>
+							<input type="datetime-local" class="form-control" id="check_out_date" name="check_out_date" required>
+
+                        </div>
+                        <!-- Input para subir una foto -->
+                        <div class="mb-3">
+							<label for="habitacionSelect">Habitación:</label>
+							<select class="form-control" id="habitacionSelect" name="id_bedroom" required>
+								<option value="" disabled selected>Seleccione una habitación</option>
+
+								{% for habitacion in habitaciones %}
+                                <option value="{{ habitacion.id_bedroom }}">{{ habitacion.bedroom_name }}</option>
+                                {% endfor %}
+							</select>
+						</div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary agregar-registro">Agregar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </section>
 
-<script src="{% static 'js/historial.js' %}"></script>
+<script src="{% static 'js/historiall.js' %}"></script>
 
 {% endblock %}

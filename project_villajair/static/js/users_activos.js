@@ -1,16 +1,12 @@
 let dataTable
-let dataTablaIsInitialized = false
-
-const urlParams = new URLSearchParams(window.location.search)
-const userId = urlParams.get('user_id')
+let dataTableIsInitialized = false
 
 const dataTableOptions = {
 	columnDefs: [
-		{ className: 'centered', targets: [0, 1, 2, 3] },
-		{ orderable: false, targets: [0] },
-		{ searchable: false, targets: [0] }
+		{ className: 'centered', targets: [0, 1, 2, 3, 4, 5, 6] },
+		{ searchable: false, targets: [1, 2] }
 	],
-	pageLength: 4,
+	pageLength: 8,
 	destroy: true,
 	language: {
 		autoFill: {
@@ -239,38 +235,49 @@ const dataTableOptions = {
 }
 
 const initDataTable = async () => {
-	if (dataTablaIsInitialized) {
+	if (dataTableIsInitialized) {
 		dataTable.destroy()
 	}
-	await listaRegistros(userId)
 
-	dataTable = $('#datatable-registers').DataTable(dataTableOptions)
+	await listUsers()
 
-	dataTablaIsInitialized = true
+	dataTable = $('#datatable-users').DataTable(dataTableOptions)
+
+	dataTableIsInitialized = true
 }
 
-const listaRegistros = async userId => {
+const listUsers = async () => {
 	try {
-		const response = await fetch(
-			`http://127.0.0.1:8000/listarRegistros/${userId}`
-		)
+		const response = await fetch('http://127.0.0.1:8000/listarUsuariosActivos/')
 		const data = await response.json()
 
 		let content = ``
-		data.registros.forEach((register, index) => {
+
+		data.users.forEach((user, index) => {
 			content += `
-				<tr>
+                <tr>
 					<td>${index + 1}</td>
-					<td>${register.check_in_date}</td>
-					<td>${register.check_out_date}</td>
-					<td>${register.bedroom_name}</td>
-				</tr>
-			`
+					<td>${user.full_name}</td>
+					<td>${user.nit}</td>
+					<td>${user.email}</td>
+					<td>${user.phone_number}</td>
+					<td>${user.age}</td>
+					<td>${user.country}</td>
+					<td>
+						<div class="btn-action">
+							<a href="#" class="btn btn-primary view-registers" data-id="${user.id_user}" onclick="viewHistory(${user.id_user})"><i class="fa-solid fa-eye"></i></a>
+						</div>
+					</td>
+                </tr>`
 		})
-		tablebody_registers.innerHTML = content
+		tablebody_users.innerHTML = content
 	} catch (ex) {
 		alert(ex)
 	}
+}
+
+function viewHistory(userId) {
+	window.location.href = `/historial/?user_id=${userId}`
 }
 
 window.addEventListener('load', async () => {

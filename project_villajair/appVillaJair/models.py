@@ -23,7 +23,7 @@ class Bedrooms(models.Model):
     deleted_at = models.DateTimeField(null=True, blank=True) 
     id_state = models.ForeignKey('States', models.DO_NOTHING, db_column='id_state', default=4)
 
-    
+
     def save(self, *args, **kwargs):
         # Si se actualiza la habitación, actualiza la fecha de actualización
         if self.pk:
@@ -38,6 +38,7 @@ class Registers(models.Model):
     check_out_date = models.DateTimeField()
     id_user = models.ForeignKey('Users', models.DO_NOTHING, db_column='id_user', related_name='registers')
     id_bedroom = models.ForeignKey(Bedrooms, models.DO_NOTHING, db_column='id_bedroom')
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
 

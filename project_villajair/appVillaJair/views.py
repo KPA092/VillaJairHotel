@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.http.response import JsonResponse
-from .forms import UserRegistrationForm, CustomAuthenticationForm
+from .forms import UserRegistrationForm, CustomAuthenticationForm, RegisterForm
 from .models import Bedrooms, Users, Registers
 from django.shortcuts import render
 from .forms import UserRegistrationForm,CustomAuthenticationForm
@@ -20,6 +20,7 @@ from reportlab.lib.styles import getSampleStyleSheet
 import locale, json
 from datetime import datetime
 from django.db.models import F
+from django.http import Http404
 
 #-----------------------------------------------------HOME------------------------------------------------------
 from django.http import JsonResponse
@@ -82,25 +83,61 @@ def registro(request):
         form = UserRegistrationForm()
         return render(request, 'registro.html', {'form': form})
 
-#-------------------------------------------------HABITACIONES-------------------------------------------------------
-def habitaciones(request):
-    habitaciones = Bedrooms.objects.all()
-    return render(request, 'habitaciones.html', {'habitaciones': habitaciones})
-
 #----------------------------------------TABLA DE LOS USUARIOS ACTIVOS-----------------------------------------------
 def usuariosActivos(request):
     return render(request, 'usuariosActivos.html', {'section': 'usuariosActivos'})
 
+def listarUsuariosActivos(request):
+    active_users = Users.objects.filter(id_state=1).values()
+    data = {'users': list(active_users)}
+    return JsonResponse(data)
+
 # --------------------------------------OBTENER LOS REGISTROS DEL HISTORIAL------------------------------------------
 def historial(request):
-    return render(request, 'historial.html')
+    user_id = request.GET.get('user_id')
+    if not user_id:
+        raise Http404("User ID not found")
+    habitaciones = Bedrooms.objects.filter(deleted_at__isnull=True).values('id_bedroom', 'bedroom_name')
+
+    context = {
+        'habitaciones': habitaciones,
+        'user_id': user_id,
+    }
+
+    return render(request, 'historial.html', context)
 
 def listarRegistros(request, user_id):
     registros = Registers.objects.filter(id_user=user_id).annotate(
         bedroom_name=F('id_bedroom__bedroom_name')
     ).values('id_register', 'check_in_date', 'check_out_date', 'bedroom_name')
-    data = {'registros': list(registros)}
+
+    data = {
+        'registros': list(registros),
+
+    }
     return JsonResponse(data)
+
+def crear_registro(request):
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            registro = form.save(commit=False)
+            user_id = request.POST.get('user_id')
+            if user_id:
+                try:
+                    user = Users.objects.get(pk=user_id)  # Obtén la instancia del usuario
+                    registro.id_user = user
+                    registro.save()
+                    return JsonResponse({'message': 'Registro creado correctamente'}, status=200)
+                except Users.DoesNotExist:
+                    return JsonResponse({'message': 'User ID is invalid'}, status=400)
+            else:
+                return JsonResponse({'message': 'User ID is missing'}, status=400)
+        else:
+             # Extraer y concatenar los mensajes de error
+            errors = {field: ' '.join(error) for field, error in form.errors.items()}
+            return JsonResponse({'errors': errors})
+    return JsonResponse({'message': 'Método no permitido'}, status=405)
 
 # --------------------------------------------TABLA DE TODOS LOS USUARIOS---------------------------------------------
 def todosLosUsuarios(request):
@@ -463,15 +500,6 @@ def update_habitacion(request, habitacion_id):
         return JsonResponse(data)
     else:
         return JsonResponse({'error': 'Método no permitido'}, status=405)
-
-@login_required
-def usuariosActivos(request):
-    return render(request, 'usuariosActivos.html', {'section': 'usuariosActivos'})
-
-
-@login_required
-def todosLosUsuarios(request):
-    return render(request, 'todosLosUsuarios.html', {'section': 'todosLosUsuarios'})
 
 def login(request):
     if request.method == 'POST':

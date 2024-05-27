@@ -65,6 +65,8 @@
                         <div class="form-group">
                             <label for="estadoHabitacion">Seleccionar estado:</label>
                             <select class="form-control" id="estadoHabitacion" name="estado_habitacion">
+                                <option value="" disabled selected>Seleccione un estado</option>
+
                                 {% for estado in estados %}
                                 <option value="{{ estado.id_state }}">{{ estado.state_name }}</option>
                                 {% endfor %}
@@ -92,19 +94,19 @@
                     {% csrf_token %}
                     <div class="modal-body">
                         <!-- Input para el nombre de la habitación -->
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="nombreHabitacion">Nombre de la habitación:</label>
                             <input type="text" class="form-control" id="nombreHabitacion" name="nombre_habitacion"
                                 required>
                         </div>
                         <!-- Input para el límite de personas -->
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="limitePersonas">Límite de personas:</label>
                             <input type="number" class="form-control" id="limitePersonas" name="limite_personas"
                                 required>
                         </div>
                         <!-- Input para subir una foto -->
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="fotoHabitacion">Foto de la habitación:</label>
                             <input type="file" class="form-control" id="fotoHabitacion" name="foto_habitacion"
                                 accept="image/*" required>

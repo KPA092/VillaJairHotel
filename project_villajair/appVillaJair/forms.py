@@ -97,9 +97,23 @@ class UserRegistrationForm(forms.ModelForm):
             check_out_date = self.cleaned_data['check_out_date']
             Registers.objects.create(id_user=existing_user, id_bedroom=bedroom, check_in_date=check_in_date, check_out_date=check_out_date)
 
+#Solo registros
+class RegisterForm(forms.ModelForm):
+    class Meta:
+        model = Registers
+        fields = ['check_in_date', 'check_out_date', 'id_bedroom']
+      
+    def clean(self):
+        cleaned_data = super().clean()
+        check_in_date = cleaned_data.get('check_in_date')
+        check_out_date = cleaned_data.get('check_out_date')
+
+        # Verifica si la fecha de entrada es menor que la fecha de salida
+        if check_in_date >= check_out_date:
+            raise forms.ValidationError("La fecha de entrada debe ser anterior a la fecha de salida")
+        return cleaned_data
     
-
-
+     
 #login
 class CustomAuthenticationForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
