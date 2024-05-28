@@ -1,0 +1,3 @@
+POR MEJORAR:
+
+Todos los usuarios(si se puede mejorar, cuando se edita el usuario, al guardarlo que no recargue la página, sino, solo el datatable).
