@@ -213,3 +213,22 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 })
+
+// Buscador
+function filtrarHabitaciones() {
+    var filtro = document.getElementById('searchInput').value.toUpperCase();
+    var habitaciones = document.getElementsByClassName('habitacion');
+
+    for (var i = 0; i < habitaciones.length; i++) {
+        var habitacion = habitaciones[i];
+        var nombreHabitacion = habitacion.getElementsByClassName('card-header')[0].innerText.toUpperCase();
+        
+        if (nombreHabitacion.indexOf(filtro) > -1) {
+            habitacion.style.display = '';
+        } else {
+            habitacion.style.display = 'none';
+        }
+    }
+}
+
+document.getElementById('searchInput').addEventListener('input', filtrarHabitaciones);

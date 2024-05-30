@@ -316,12 +316,7 @@ a.selected {
 
 /* /Diseño de habitaciones/ */
 
-.habitacion h2 {
-	font-size: 20px;
-	text-align: center;
-	color: #e2802d;
-	border-bottom: 1px solid #e2802d;
-}
+
 
 .card-header {
 	background-color: #fff;
@@ -377,41 +372,7 @@ a.selected {
 }
 
 /*detalle habitacion*/
-#detalle_habitacion{
-	
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
 
-.container_custom{
-	width: 90%;
-}
-
-.text-orange {
-    color: #e2802d;
-	margin-bottom: 0px;
-}
-.habitacion-imagen-individual{
-	width: 100%;
-}
-
-/* .card-body{
-	padding: 0 0px 12px
-} */
-.card-img-top{
-	border-radius: 0px;
-}
-
-.card-footer{
-	display:flex ;
-	justify-content: space-around;
-}
-
-.btn-detail{
-	width: 40%;
-	margin-top: 0px;
-}
 
 /* Diseño datatable */
 .centered {

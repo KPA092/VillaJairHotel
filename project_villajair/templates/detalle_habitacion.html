@@ -5,77 +5,87 @@
 
 <section id="detalle_habitacion" class="seccion">
     <div>
-        <div class="row">
-            <div class="col-md-6">
+        <div class="row justify-content-center align-items-center" style="gap: 30px;">
+            <div class="col-md-4">
                 <div class="habitacion card">
-                    <h2 class="card-header text-center">{{ habitacion.bedroom_name }}</h2>
+                    <h2 class="card-header text-center" style="color: #46a957; font-size: 25px;"><strong>{{ habitacion.bedroom_name }}</strong></h2>
                     <div class="habitacion-imagen-individual" data-habitacion-id="{{ habitacion.id_bedroom }}">
-                        <img src="{{ habitacion.photo.url }}" alt="{{ habitacion.nombre }}" class="card-img-top"
-                            style="height: 200px;">
+                        <img src="{{ habitacion.photo.url }}" alt="{{ habitacion.nombre }}" class="card-img-top" style="height: 200px;">
                     </div>
-                    <div class="card-body d-flex flex-column justify-content-between">
-                        <button class="btn btn-primary mt-2 btn-editar-habitacion"
-                            data-habitacion-id="{{ habitacion.id_bedroom }}" data-bs-toggle="modal"
-                            data-bs-target="#modalEdit">Editar</button>
-                        <button class="btn btn-danger mt-2 btn-eliminar-habitacion"
-                            data-habitacion-id="{{ habitacion.id_bedroom }}">Eliminar</button>
+                    <div class="card-body d-flex justify-content-center">
+                        <button class="btn btn-primary mt-2 me-2 btn-editar-habitacion" data-habitacion-id="{{ habitacion.id_bedroom }}" data-bs-toggle="modal" data-bs-target="#modalEdit" style="width: 100px;">Editar</button>
+                        <button class="btn btn-danger mt-2 btn-eliminar-habitacion" data-habitacion-id="{{ habitacion.id_bedroom }}" style="width: 100px;">Eliminar</button>
                     </div>
                     <div id="id_bedroom" data-habitacion-id="{{ habitacion.id_bedroom }}"></div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <h3>Usuarios en la habitación:</h3>
-                <ul>
-                    {% for usuario in usuarios %}
-                    <li>ID: {{ usuario.id_user}}, Identificación: {{ usuario.nit }}, Nombre: {{ usuario.full_name }}
-                    </li>
-                    {% empty %}
-                    <li>No hay usuarios en esta habitación.</li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal de edición de habitación -->
-    <div class="modal fade" id="modalEdit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modificar Habitación</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="col-lg-6">
+                <div class="card" style="max-height: 430px; overflow-y: auto;">
+                    <div class="card-body">
+                        <h3 class="card-title text-center mt-3 mb-3" style="color: #46a957;"><strong>Usuarios en la habitación</strong></h3>
+                        <div class="row">
+                            {% for usuario in usuarios %}
+                            <div class="col-md-12 mb-3">
+                                <div class="card" style="background-color:#afebb9;">
+                                    <div class="card-body mt-3">
+                                        <p class="card-text"><strong>Identificación:</strong> {{ usuario.nit }},<br> <strong>Nombre:</strong> {{ usuario.full_name }},<br> <strong>Edad:</strong> {{ usuario.age }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% empty %}
+                            <div class="col">
+                                <p>No hay usuarios en esta habitación.</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
                 </div>
-                <form method="post" id="editarHabitacionForm" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="modal-body">
-                        <!-- Input para el nombre de la habitación -->
-                        <div class="form-group">
-                            <label for="nombreHabitacion">Nombre de la habitación:</label>
-                            <input type="text" class="form-control" id="nombreHabitacion" name="nombre_habitacion"
-                                required>
-                        </div>
-                        <!-- Input para el límite de personas -->
-                        <div class="form-group">
-                            <label for="limitePersonas">Límite de personas:</label>
-                            <input type="number" class="form-control" id="limitePersonas" name="limite_personas"
-                                required>
-                        </div>
-                        <!-- Input para subir una foto -->
-                        <div class="form-group">
-                            <label for="fotoHabitacion">Foto de la habitación:</label>
-                            <input type="file" class="form-control" id="fotoHabitacion" name="foto_habitacion"
-                                accept="image/*">
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary guardar-cambios">Modificar Habitación</button>
-                    </div>
-                </form>
             </div>
         </div>
     </div>
 </section>
+
+
+
+
+<!-- Modal de edición de habitación -->
+<div class="modal fade" id="modalEdit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modificar Habitación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" id="editarHabitacionForm" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <!-- Input para el nombre de la habitación -->
+                    <div class="form-group">
+                        <label for="nombreHabitacion">Nombre de la habitación:</label>
+                        <input type="text" class="form-control" id="nombreHabitacion" name="nombre_habitacion"
+                            required>
+                    </div>
+                    <!-- Input para el límite de personas -->
+                    <div class="form-group">
+                        <label for="limitePersonas">Límite de personas:</label>
+                        <input type="number" class="form-control" id="limitePersonas" name="limite_personas"
+                            required>
+                    </div>
+                    <!-- Input para subir una foto -->
+                    <div class="form-group">
+                        <label for="fotoHabitacion">Foto de la habitación:</label>
+                        <input type="file" class="form-control" id="fotoHabitacion" name="foto_habitacion"
+                            accept="image/*">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary guardar-cambios">Modificar Habitación</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <script src="{% static 'js/habitacion.js' %}"></script>
 
