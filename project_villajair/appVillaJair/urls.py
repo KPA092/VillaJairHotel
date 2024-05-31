@@ -1,7 +1,10 @@
 from . import views
 from django.urls import path
 from django.contrib.auth import views as auth_views
+from .tasks import iniciar_tarea_actualizacion, iniciar_tarea_actualizacion_habitaciones
 
+iniciar_tarea_actualizacion()
+iniciar_tarea_actualizacion_habitaciones()
 
 urlpatterns = [
     path('inicio/', views.inicio, name='inicio'),

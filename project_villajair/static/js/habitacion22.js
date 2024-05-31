@@ -86,13 +86,13 @@ document.addEventListener('DOMContentLoaded', function () {
             const habitacionId = boton.getAttribute('data-habitacion-id');
             Swal.fire({
                 title: '¿Estás seguro?',
-                text: '¡No podrás revertir esto! podrias perder datos importantes',
+                text: '¡No podrás revertir esto!',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Sí, eliminar'
-            }).then((result) => {
+            }).then(result => {
                 if (result.isConfirmed) {
                     eliminarHabitacion(habitacionId);
                 }
@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const data = await respuesta.json();
                 Swal.fire({
                     icon: 'success',
-                    title: '¡Habitación eliminada correctamente!',
+                    title: '¡Habitación eliminada correctamente!'
                 }).then(() => {
                     window.location.href = '/habitaciones/';
                 });
@@ -166,6 +166,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     });
             });
         });
+
         const editarHabitacionForm = document.getElementById('editarHabitacionForm');
         if (editarHabitacionForm) {
             editarHabitacionForm.addEventListener('submit', function (e) {
@@ -212,23 +213,26 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
     }
-})
 
-// Buscador
-function filtrarHabitaciones() {
-    var filtro = document.getElementById('searchInput').value.toUpperCase();
-    var habitaciones = document.getElementsByClassName('habitacion');
+    // Buscador
+    function filtrarHabitaciones() {
+        const filtro = document.getElementById('searchInput').value.toUpperCase();
+        const habitaciones = document.getElementsByClassName('habitacion');
 
-    for (var i = 0; i < habitaciones.length; i++) {
-        var habitacion = habitaciones[i];
-        var nombreHabitacion = habitacion.getElementsByClassName('card-header')[0].innerText.toUpperCase();
-        
-        if (nombreHabitacion.indexOf(filtro) > -1) {
-            habitacion.style.display = '';
-        } else {
-            habitacion.style.display = 'none';
+        for (let i = 0; i < habitaciones.length; i++) {
+            const habitacion = habitaciones[i];
+            const nombreHabitacion = habitacion.getElementsByClassName('card-header')[0].innerText.toUpperCase();
+
+            if (nombreHabitacion.indexOf(filtro) > -1) {
+                habitacion.style.display = '';
+            } else {
+                habitacion.style.display = 'none';
+            }
         }
     }
-}
 
-document.getElementById('searchInput').addEventListener('input', filtrarHabitaciones);
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('input', filtrarHabitaciones);
+    }
+});

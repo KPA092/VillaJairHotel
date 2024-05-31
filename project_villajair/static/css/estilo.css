@@ -316,7 +316,12 @@ a.selected {
 
 /* /Diseño de habitaciones/ */
 
-
+.habitacion h2 {
+	font-size: 20px;
+	text-align: center;
+	color: #e2802d;
+	border-bottom: 1px solid #e2802d;
+}
 
 .card-header {
 	background-color: #fff;

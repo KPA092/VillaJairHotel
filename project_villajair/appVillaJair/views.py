@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.http.response import JsonResponse
-from .forms import UserRegistrationForm, CustomAuthenticationForm, RegisterForm
+from .forms import UserRegistrationForm, CustomAuthenticationForm ,RegisterForm
 from .models import Bedrooms, Users, Registers
 from django.shortcuts import render
 from .forms import UserRegistrationForm,CustomAuthenticationForm
@@ -14,13 +14,14 @@ from django.contrib import messages
 from django.utils import timezone
 from reportlab.lib import colors
 from reportlab.lib.units import inch
-from reportlab.lib.pagesizes import letter, landscape
+from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Spacer, Paragraph
 from reportlab.lib.styles import getSampleStyleSheet
 import locale, json
 from datetime import datetime
 from django.db.models import F
 from django.http import Http404
+from django.core.exceptions import ValidationError
 
 #-----------------------------------------------------HOME------------------------------------------------------
 from django.http import JsonResponse
@@ -41,11 +42,11 @@ MAX_IMAGE_SIZE_BYTES = 10 * 1024 * 1024  # Tamaño máximo permitido en bytes (1
 
 @login_required
 def inicio(request):
-    global tarea_iniciada
-    if not tarea_iniciada:
-        iniciar_tarea_actualizacion()
-        iniciar_tarea_actualizacion_habitaciones()
-        tarea_iniciada = True
+    # global tarea_iniciada
+    # if not tarea_iniciada:
+    #     iniciar_tarea_actualizacion()
+    #     iniciar_tarea_actualizacion_habitaciones()
+    #     tarea_iniciada = True
     return render(request, 'inicio.html')
 
 #-------------------------------------------------REGISTRO--------------------------------------------------------
@@ -79,7 +80,7 @@ def registro(request):
                     # Obtener el ID de la habitación seleccionada en el formulario
                     bedroom_id = form.cleaned_data['bedroom']
                     bedroom = Bedrooms.objects.get(id_bedroom=bedroom_id)
-                    bedroom.update_room_status
+                    bedroom.update_room_status()
 
                     return JsonResponse({'success': True, 'menor_de_edad': False})
         else:
@@ -123,27 +124,21 @@ def listarRegistros(request, user_id):
     }
     return JsonResponse(data)
 
+
 def crear_registro(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
-            registro = form.save(commit=False)
-            user_id = request.POST.get('user_id')
-            if user_id:
-                try:
-                    user = Users.objects.get(pk=user_id)  # Obtén la instancia del usuario
-                    registro.id_user = user
-                    registro.save()
-                    return JsonResponse({'message': 'Registro creado correctamente'}, status=200)
-                except Users.DoesNotExist:
-                    return JsonResponse({'message': 'User ID is invalid'}, status=400)
-            else:
-                return JsonResponse({'message': 'User ID is missing'}, status=400)
+            try:
+                form.save()
+                return JsonResponse({'message': 'Registro creado correctamente', 'success': True}, status=200)
+            except ValidationError as e:
+                error_message = ' '.join(e.messages)
+                return JsonResponse({'message': error_message, 'success': False})
         else:
-             # Extraer y concatenar los mensajes de error
             errors = {field: ' '.join(error) for field, error in form.errors.items()}
-            return JsonResponse({'errors': errors})
-    return JsonResponse({'message': 'Método no permitido'}, status=405)
+            return JsonResponse({'errors': errors, 'success': False})
+    return JsonResponse({'message': 'Método no permitido', 'success': False}, status=405)
 
 # --------------------------------------------TABLA DE TODOS LOS USUARIOS---------------------------------------------
 def todosLosUsuarios(request):
@@ -435,35 +430,48 @@ def eliminar_imagen(habitacion_id):
 @login_required
 def eliminar_habitacion(request, habitacion_id):
     try:
-        # Obtener la habitación
         habitacion = Bedrooms.objects.get(id_bedroom=habitacion_id)
-        
-        # Marcar la habitación como eliminada
         habitacion.deleted_at = timezone.now()
         habitacion.save()
-        
-        # Obtener todos los registros asociados a la habitación
-        registros_habitacion = Registers.objects.filter(id_bedroom=habitacion_id)
-        
-        # Obtener el estado de usuario inactivo (estado 2)
-        estado_inactivo = States.objects.get(id_state=2)
 
-        # Actualizar el estado de los usuarios asociados a los registros
-        for registro in registros_habitacion:
-            usuario = registro.id_user
-            usuario.id_state = estado_inactivo  # Cambiar estado del usuario a 2 (estado inactivo)
-            usuario.save()
-        
-        # Eliminar la imagen de la habitación
         eliminar_imagen(habitacion_id)
 
         return JsonResponse({'mensaje': 'Habitación eliminada correctamente'})
     except Bedrooms.DoesNotExist:
         return JsonResponse({'error': 'La habitación no existe'}, status=404)
-    except States.DoesNotExist:
-        return JsonResponse({'error': 'El estado inactivo no existe'}, status=500)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+# def eliminar_habitacion(request, habitacion_id):
+#     try:
+#         # Obtener la habitación
+#         habitacion = Bedrooms.objects.get(id_bedroom=habitacion_id)
+        
+#         # Marcar la habitación como eliminada
+#         habitacion.deleted_at = timezone.now()
+#         habitacion.save()
+        
+#         # Obtener todos los registros asociados a la habitación
+#         registros_habitacion = Registers.objects.filter(id_bedroom=habitacion_id)
+        
+#         # Obtener el estado de usuario inactivo (estado 2)
+#         estado_inactivo = States.objects.get(id_state=2)
+
+#         # Actualizar el estado de los usuarios asociados a los registros
+#         for registro in registros_habitacion:
+#             usuario = registro.id_user
+#             usuario.id_state = estado_inactivo  # Cambiar estado del usuario a 2 (estado inactivo)
+#             usuario.save()
+        
+#         # Eliminar la imagen de la habitación
+#         eliminar_imagen(habitacion_id)
+
+#         return JsonResponse({'mensaje': 'Habitación eliminada correctamente'})
+#     except Bedrooms.DoesNotExist:
+#         return JsonResponse({'error': 'La habitación no existe'}, status=404)
+#     except States.DoesNotExist:
+#         return JsonResponse({'error': 'El estado inactivo no existe'}, status=500)
+#     except Exception as e:
+#         return JsonResponse({'error': str(e)}, status=500)
     
 @login_required
 def detalle_habitacion(request, habitacion_id):

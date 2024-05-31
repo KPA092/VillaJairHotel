@@ -17,6 +17,7 @@ def actualizar_estado_usuarios():
                 registros_usuario = Registers.objects.filter(id_user=usuario).order_by('-created_at')
                 if registros_usuario:
                     ultimo_registro = registros_usuario.first()
+                    
                     if ultimo_registro.check_in_date <= fecha_actual <= ultimo_registro.check_out_date and usuario.id_state != 1:
                         usuario.id_state = States.objects.get(id_state=1)
                         usuario.save()

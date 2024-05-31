@@ -281,35 +281,50 @@ window.addEventListener('load', async () => {
 	await initDataTable()
 })
 
-const agregarRegistro = async event => {
-	event.preventDefault()
+document.addEventListener('DOMContentLoaded', function () {
 	const form = document.getElementById('crearRegistroForm')
-	const formData = new FormData(form)
+	form.addEventListener('submit', async function (event) {
+		event.preventDefault()
+		const formData = new FormData(form)
 
-	try {
-		const response = await fetch(form.action, {
-			method: 'POST',
-			body: formData
-		})
-		if (response.ok) {
-			$('#modalCreateRegister').modal('hide') // Oculta el modal
-			form.reset() // Resetea el formulario
-			$('body').removeClass('modal-open') // Elimina la clase 'modal-open' del cuerpo
-			$('.modal-backdrop').remove() // Elimina el fondo oscuro del modal
-			await initDataTable() // Recarga la tabla de datos
-		} else {
-			const errorData = await response.json()
-			alert('Error al agregar el registro: ' + errorData.message)
+		try {
+			const response = await fetch(form.action, {
+				method: 'POST',
+				body: formData
+			})
+
+			const data = await response.json()
+			console.log(data)
+			if (response.ok) {
+				if (data.success) {
+					await Swal.fire({
+						icon: 'success',
+						title: '¡Registro exitoso!',
+						text: 'El usuario se ha registrado correctamente.'
+					})
+					await initDataTable()
+				} else if (!data.success) {
+					let errorMessages = Object.values(data.errors || {message: data.message}).join('\n')
+                    await Swal.fire({
+                        icon: 'error',
+                        title: '¡Error!',
+                        text: errorMessages
+                    })
+				}
+			} else if (data.errors) {
+				let errorMessages = Object.values(data.errors).join('\n')
+				await Swal.fire({
+					icon: 'error',
+					title: '¡Error!',
+					text: errorMessages
+				})
+			}
+		} catch (error) {
+			await Swal.fire({
+				icon: 'error',
+				title: 'Error',
+				text: 'Error al agregar el registro: ' + error.message
+			})
 		}
-	} catch (error) {
-		alert('Error al agregar el registro: ' + error.message)
-	}
-}
-
-document
-	.getElementById('crearRegistroForm')
-	.addEventListener('submit', agregarRegistro)
-
-window.addEventListener('load', async () => {
-	await initDataTable()
+	})
 })
