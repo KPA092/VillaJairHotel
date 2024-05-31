@@ -4,7 +4,7 @@ let dataTableIsInitialized = false
 const dataTableOptions = {
 	columnDefs: [
 		{ className: 'centered', targets: [0, 1, 2, 3, 4, 5, 6] },
-		{ searchable: false, targets: [4,5,6,7] }
+		{ searchable: false, targets: [4, 5, 6, 7] }
 	],
 	pageLength: 8,
 	destroy: true,
@@ -263,9 +263,14 @@ const listUsers = async () => {
 					<td>${user.phone_number}</td>
 					<td>${user.age}</td>
 					<td>${user.country}</td>
+					<td class="centered">${user.last_bedroom}</td>
 					<td>
 						<div class="btn-action">
-							<a href="#" class="btn btn-primary view-registers" data-id="${user.id_user}" onclick="viewHistory(${user.id_user})"><i class="fa-solid fa-eye"></i></a>
+							<a href="#" class="btn btn-primary view-registers" data-id="${
+								user.id_user
+							}" onclick="viewHistory(${
+				user.id_user
+			})"><i class="fa-solid fa-eye"></i></a>
 						</div>
 					</td>
                 </tr>`

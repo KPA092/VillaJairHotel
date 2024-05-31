@@ -18,12 +18,19 @@ def actualizar_estado_usuarios():
                 if registros_usuario:
                     ultimo_registro = registros_usuario.first()
                     
-                    if ultimo_registro.check_in_date <= fecha_actual <= ultimo_registro.check_out_date and usuario.id_state != 1:
+                    
+                    if ultimo_registro.id_bedroom.deleted_at:
+                        usuario.id_state = States.objects.get(id_state=2)
+                        usuario.save()
+                        
+                    elif ultimo_registro.check_in_date <= fecha_actual <= ultimo_registro.check_out_date and usuario.id_state != 1:
                         usuario.id_state = States.objects.get(id_state=1)
                         usuario.save()
+
                     elif fecha_actual > ultimo_registro.check_out_date or fecha_actual < ultimo_registro.check_in_date and usuario.id_state != 2:
                         usuario.id_state = States.objects.get(id_state=2)
                         usuario.save()
+
 
             logger.info("Tarea de actualización de estado de usuarios completada.")
         except Exception as e:

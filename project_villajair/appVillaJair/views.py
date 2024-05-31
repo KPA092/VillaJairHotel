@@ -22,6 +22,7 @@ from datetime import datetime
 from django.db.models import F
 from django.http import Http404
 from django.core.exceptions import ValidationError
+from django.db.models import Max
 
 #-----------------------------------------------------HOME------------------------------------------------------
 from django.http import JsonResponse
@@ -96,6 +97,13 @@ def usuariosActivos(request):
 
 def listarUsuariosActivos(request):
     active_users = Users.objects.filter(id_state=1).values()
+    for user in active_users:
+        last_register = Registers.objects.filter(id_user=user['id_user']).aggregate(Max('check_in_date'))
+        if last_register:
+            last_bedroom = Registers.objects.filter(id_user=user['id_user'], check_in_date=last_register['check_in_date__max']).values('id_bedroom__bedroom_name').first()
+            user['last_bedroom'] = last_bedroom['id_bedroom__bedroom_name'] if last_bedroom else None
+        else:
+            user['last_bedroom'] = None
     data = {'users': list(active_users)}
     return JsonResponse(data)
 
@@ -432,46 +440,25 @@ def eliminar_habitacion(request, habitacion_id):
     try:
         habitacion = Bedrooms.objects.get(id_bedroom=habitacion_id)
         habitacion.deleted_at = timezone.now()
-        habitacion.save()
+        # eliminar_imagen(habitacion_id)
+        registros_habitacion = Registers.objects.filter(id_bedroom=habitacion_id)
+        
+        # Obtener el estado de usuario inactivo (estado 2)
+        estado_inactivo = States.objects.get(id_state=2)
 
-        eliminar_imagen(habitacion_id)
+        # Actualizar el estado de los usuarios asociados a los registros
+        for registro in registros_habitacion:
+            usuario = registro.id_user
+            usuario.id_state = estado_inactivo  # Cambiar estado del usuario a 2 (estado inactivo)
+            usuario.save()
+        habitacion.save()
+        print(usuario)
 
         return JsonResponse({'mensaje': 'Habitación eliminada correctamente'})
     except Bedrooms.DoesNotExist:
         return JsonResponse({'error': 'La habitación no existe'}, status=404)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
-# def eliminar_habitacion(request, habitacion_id):
-#     try:
-#         # Obtener la habitación
-#         habitacion = Bedrooms.objects.get(id_bedroom=habitacion_id)
-        
-#         # Marcar la habitación como eliminada
-#         habitacion.deleted_at = timezone.now()
-#         habitacion.save()
-        
-#         # Obtener todos los registros asociados a la habitación
-#         registros_habitacion = Registers.objects.filter(id_bedroom=habitacion_id)
-        
-#         # Obtener el estado de usuario inactivo (estado 2)
-#         estado_inactivo = States.objects.get(id_state=2)
-
-#         # Actualizar el estado de los usuarios asociados a los registros
-#         for registro in registros_habitacion:
-#             usuario = registro.id_user
-#             usuario.id_state = estado_inactivo  # Cambiar estado del usuario a 2 (estado inactivo)
-#             usuario.save()
-        
-#         # Eliminar la imagen de la habitación
-#         eliminar_imagen(habitacion_id)
-
-#         return JsonResponse({'mensaje': 'Habitación eliminada correctamente'})
-#     except Bedrooms.DoesNotExist:
-#         return JsonResponse({'error': 'La habitación no existe'}, status=404)
-#     except States.DoesNotExist:
-#         return JsonResponse({'error': 'El estado inactivo no existe'}, status=500)
-#     except Exception as e:
-#         return JsonResponse({'error': str(e)}, status=500)
     
 @login_required
 def detalle_habitacion(request, habitacion_id):
