@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from django.db import connection
 import os
 from pathlib import Path
+from django.apps import AppConfig
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -43,6 +44,13 @@ INSTALLED_APPS = [
 
 ]
 
+
+# class AppVillaJairConfig(AppConfig):
+#     default_auto_field = 'django.db.models.BigAutoField'
+#     name = 'appVillaJair'
+
+#     def ready(self):
+#         import appVillaJair.signals
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -117,7 +125,12 @@ LOGIN_URL = 'login'
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es'
+
+LANGUAGES = [
+    ('es', 'Spanish'),
+]
+
 
 TIME_ZONE = 'America/Bogota'
 

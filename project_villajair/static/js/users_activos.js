@@ -4,7 +4,7 @@ let dataTableIsInitialized = false
 const dataTableOptions = {
 	columnDefs: [
 		{ className: 'centered', targets: [0, 1, 2, 3, 4, 5, 6] },
-		{ searchable: false, targets: [1, 2] }
+		{ searchable: false, targets: [2, 3] }
 	],
 	pageLength: 8,
 	destroy: true,

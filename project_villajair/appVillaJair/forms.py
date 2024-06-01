@@ -3,6 +3,8 @@ from .models import Users, Bedrooms, Registers, States
 from django.contrib.auth.forms import AuthenticationForm
 from django.utils import timezone
 
+
+
 DOCUMENT_TYPE_CHOICES = [
     ('CC', 'Cédula de Ciudadanía'),
     ('TI', 'Tarjeta de Identidad'),
@@ -10,7 +12,6 @@ DOCUMENT_TYPE_CHOICES = [
     ('CE', 'Cédula de Extranjería'),
 ]
 
-#Registrar usuarios
 class UserRegistrationForm(forms.ModelForm):
     check_in_date = forms.DateTimeField(label='Fecha de entrada', widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))
     check_out_date = forms.DateTimeField(label='Fecha de salida', widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))
@@ -47,12 +48,15 @@ class UserRegistrationForm(forms.ModelForm):
         self.fields['phone_number'].widget.attrs.update({'type': 'tel'})
         self.fields['age'].widget.attrs.update()
 
-        self.fields['bedroom'].choices = [(bedroom.id_bedroom, bedroom.bedroom_name) for bedroom in Bedrooms.objects.filter(deleted_at__isnull=True)]
+        bedrooms_choices = [(bedroom.id_bedroom, bedroom.bedroom_name) for bedroom in Bedrooms.objects.filter(deleted_at__isnull=True)]
+        self.fields['bedroom'].choices = [('', 'Seleccione una habitación')] + bedrooms_choices
 
     def clean(self):
         cleaned_data = super().clean()
         check_in_date = cleaned_data.get('check_in_date')
         check_out_date = cleaned_data.get('check_out_date')
+        document_type = cleaned_data.get('document_type')
+        age = cleaned_data.get('age')
 
         # Verifica si la fecha de entrada es menor que la fecha de salida
         if check_in_date >= check_out_date:
@@ -60,19 +64,37 @@ class UserRegistrationForm(forms.ModelForm):
 
         # Verifica si la fecha actual está entre la fecha de entrada y salida
         if check_in_date <= timezone.now() <= check_out_date:
-            cleaned_data['id_state'] = States.objects.get(id_state=1)  
+            cleaned_data['id_state'] = States.objects.get(id_state=1)
         else:
-            cleaned_data['id_state'] = States.objects.get(id_state=2) 
+            cleaned_data['id_state'] = States.objects.get(id_state=2)
+
+        # Verifica si el usuario está activo en este momento
+        usuario_nit = cleaned_data.get('nit')
+        usuario_activo = Users.objects.filter(nit=usuario_nit, id_state=1).exists()
+        if usuario_activo:
+            raise forms.ValidationError("Este Huesped en este momento ya se encuentra en el hotel")
+
+        # Verifica si la habitación alcanzó su límite de personas activas
+        bedroom_id = cleaned_data.get('bedroom')
+        if bedroom_id:
+            habitacion = Bedrooms.objects.get(pk=bedroom_id)
+
+            # Verificar el estado de la habitación
+            if habitacion.id_state_id == 5:
+                raise forms.ValidationError("La habitación está en mantenimiento y no puede ser asignada.")
+
+            usuarios_activos = Users.objects.filter(id_state=1, registers__id_bedroom=bedroom_id).count()
+
+            if usuarios_activos >= habitacion.people_limit:
+                raise forms.ValidationError("La habitación ya alcanzó su límite de personas activas")
+
+        # Verifica si la edad es menor a 18 y el tipo de documento es cédula o cédula de extranjería
+        if document_type in ['CC', 'CE'] and age < 18:
+            raise forms.ValidationError("Los usuarios menores de 18 años no pueden registrarse con cédula o cédula de extranjería")
+
+        if document_type in ['TI'] and age >= 18:
+            raise forms.ValidationError("Los usuarios mayores de 18 años no pueden registrarse con tarjeta de identidad")
         return cleaned_data
-    
-    
-    def clean_email(self):
-        email = self.cleaned_data.get('email')
-        if Users.objects.filter(email=email).exists():
-            raise forms.ValidationError("El email ingresado ya esta registrado.")
-        return email
-    
-        
 
     def save(self, commit=True):
         try:
@@ -80,7 +102,7 @@ class UserRegistrationForm(forms.ModelForm):
         except Users.DoesNotExist:
             # Si el usuario no existe, guarda el usuario y el registro
             user = super().save(commit=False)
-            user.id_state = self.cleaned_data['id_state']  
+            user.id_state = self.cleaned_data['id_state']
             user.save()
 
             bedroom_id = self.cleaned_data['bedroom']
@@ -96,6 +118,7 @@ class UserRegistrationForm(forms.ModelForm):
             check_in_date = self.cleaned_data['check_in_date']
             check_out_date = self.cleaned_data['check_out_date']
             Registers.objects.create(id_user=existing_user, id_bedroom=bedroom, check_in_date=check_in_date, check_out_date=check_out_date)
+            return existing_user
 
 #Solo registros
 class RegisterForm(forms.ModelForm):
@@ -107,11 +130,47 @@ class RegisterForm(forms.ModelForm):
         cleaned_data = super().clean()
         check_in_date = cleaned_data.get('check_in_date')
         check_out_date = cleaned_data.get('check_out_date')
+        document_type = cleaned_data.get('document_type')
+        age = cleaned_data.get('age')
 
         # Verifica si la fecha de entrada es menor que la fecha de salida
         if check_in_date >= check_out_date:
             raise forms.ValidationError("La fecha de entrada debe ser anterior a la fecha de salida")
+
+        # Verifica si la fecha actual está entre la fecha de entrada y salida
+        if check_in_date <= timezone.now() <= check_out_date:
+            cleaned_data['id_state'] = States.objects.get(id_state=1)
+        else:
+            cleaned_data['id_state'] = States.objects.get(id_state=2)
+
+        # Verifica si el usuario está activo en este momento
+        usuario_nit = cleaned_data.get('nit')
+        usuario_activo = Users.objects.filter(nit=usuario_nit, id_state=1).exists()
+        if usuario_activo:
+            raise forms.ValidationError("Este Huesped en este momento ya se encuentra en el hotel")
+
+        # Verifica si la habitación alcanzó su límite de personas activas
+        bedroom_id = cleaned_data.get('bedroom')
+        if bedroom_id:
+            habitacion = Bedrooms.objects.get(pk=bedroom_id)
+
+            # Verificar el estado de la habitación
+            if habitacion.id_state_id == 5:
+                raise forms.ValidationError("La habitación está en mantenimiento y no puede ser asignada.")
+
+            usuarios_activos = Users.objects.filter(id_state=1, registers__id_bedroom=bedroom_id).count()
+
+            if usuarios_activos >= habitacion.people_limit:
+                raise forms.ValidationError("La habitación ya alcanzó su límite de personas activas")
+
+        # Verifica si la edad es menor a 18 y el tipo de documento es cédula o cédula de extranjería
+        if document_type in ['CC', 'CE'] and age < 18:
+            raise forms.ValidationError("Los usuarios menores de 18 años no pueden registrarse con cédula o cédula de extranjería")
+
+        if document_type in ['TI'] and age >= 18:
+            raise forms.ValidationError("Los usuarios mayores de 18 años no pueden registrarse con tarjeta de identidad")
         return cleaned_data
+
     
      
 #login

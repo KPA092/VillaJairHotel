@@ -32,7 +32,7 @@ import sys, os
 from django.core.cache import cache
 from django.conf import settings
 from django.utils import timezone
-from .tasks import iniciar_tarea_actualizacion
+from .tasks import iniciar_tarea_actualizacion, iniciar_tarea_actualizacion_habitaciones
 
 # Variable para asegurar que la tarea se inicia solo una vez
 tarea_iniciada = False
@@ -44,6 +44,7 @@ def inicio(request):
     global tarea_iniciada
     if not tarea_iniciada:
         iniciar_tarea_actualizacion()
+        iniciar_tarea_actualizacion_habitaciones()
         tarea_iniciada = True
     return render(request, 'inicio.html')
 
@@ -73,7 +74,13 @@ def registro(request):
                     form.save()
                     return JsonResponse({'menor_de_edad': True, 'success': True})
                 else:
-                    form.save()
+                    user = form.save()  # Guardar el usuario y obtener el objeto
+
+                    # Obtener el ID de la habitación seleccionada en el formulario
+                    bedroom_id = form.cleaned_data['bedroom']
+                    bedroom = Bedrooms.objects.get(id_bedroom=bedroom_id)
+                    bedroom.update_room_status
+
                     return JsonResponse({'success': True, 'menor_de_edad': False})
         else:
             # Extraer y concatenar los mensajes de error
@@ -82,7 +89,6 @@ def registro(request):
     else:
         form = UserRegistrationForm()
         return render(request, 'registro.html', {'form': form})
-
 #----------------------------------------TABLA DE LOS USUARIOS ACTIVOS-----------------------------------------------
 def usuariosActivos(request):
     return render(request, 'usuariosActivos.html', {'section': 'usuariosActivos'})
@@ -429,16 +435,33 @@ def eliminar_imagen(habitacion_id):
 @login_required
 def eliminar_habitacion(request, habitacion_id):
     try:
+        # Obtener la habitación
         habitacion = Bedrooms.objects.get(id_bedroom=habitacion_id)
         
+        # Marcar la habitación como eliminada
         habitacion.deleted_at = timezone.now()
         habitacion.save()
+        
+        # Obtener todos los registros asociados a la habitación
+        registros_habitacion = Registers.objects.filter(id_bedroom=habitacion_id)
+        
+        # Obtener el estado de usuario inactivo (estado 2)
+        estado_inactivo = States.objects.get(id_state=2)
 
+        # Actualizar el estado de los usuarios asociados a los registros
+        for registro in registros_habitacion:
+            usuario = registro.id_user
+            usuario.id_state = estado_inactivo  # Cambiar estado del usuario a 2 (estado inactivo)
+            usuario.save()
+        
+        # Eliminar la imagen de la habitación
         eliminar_imagen(habitacion_id)
 
         return JsonResponse({'mensaje': 'Habitación eliminada correctamente'})
     except Bedrooms.DoesNotExist:
         return JsonResponse({'error': 'La habitación no existe'}, status=404)
+    except States.DoesNotExist:
+        return JsonResponse({'error': 'El estado inactivo no existe'}, status=500)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
     
@@ -483,7 +506,7 @@ def update_habitacion(request, habitacion_id):
                 nueva_foto = request.FILES['foto_habitacion']
                 
                 nueva_foto = procesar_imagen(nueva_foto)
-
+                eliminar_imagen(habitacion_id)
 
                 habitacion.photo = nueva_foto
 

@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const habitacionId = boton.getAttribute('data-habitacion-id');
             Swal.fire({
                 title: '¿Estás seguro?',
-                text: '¡No podrás revertir esto!',
+                text: '¡No podrás revertir esto! podrias perder datos importantes',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',

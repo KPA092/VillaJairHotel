@@ -238,6 +238,33 @@ const dataTableOptions = {
 	}
 }
 
+
+const listaRegistros = async userId => {
+    try {
+        const response = await fetch(
+            `http://127.0.0.1:8000/listarRegistros/${userId}`
+        )
+        const data = await response.json()
+
+        let content = ``
+        data.registros.forEach((register, index) => {
+            const checkInDate = moment.utc(register.check_in_date).tz('America/Bogota').format('YYYY-MM-DD HH:mm');
+            const checkOutDate = moment.utc(register.check_out_date).tz('America/Bogota').format('YYYY-MM-DD HH:mm');
+            content += `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${checkInDate}</td>
+                    <td>${checkOutDate}</td>
+                    <td>${register.bedroom_name}</td>
+                </tr>
+            `
+        })
+        tablebody_registers.innerHTML = content
+    } catch (ex) {
+        alert(ex)
+    }
+}
+
 const initDataTable = async () => {
 	if (dataTablaIsInitialized) {
 		dataTable.destroy()
@@ -249,29 +276,6 @@ const initDataTable = async () => {
 	dataTablaIsInitialized = true
 }
 
-const listaRegistros = async userId => {
-	try {
-		const response = await fetch(
-			`http://127.0.0.1:8000/listarRegistros/${userId}`
-		)
-		const data = await response.json()
-
-		let content = ``
-		data.registros.forEach((register, index) => {
-			content += `
-				<tr>
-					<td>${index + 1}</td>
-					<td>${register.check_in_date}</td>
-					<td>${register.check_out_date}</td>
-					<td>${register.bedroom_name}</td>
-				</tr>
-			`
-		})
-		tablebody_registers.innerHTML = content
-	} catch (ex) {
-		alert(ex)
-	}
-}
 
 window.addEventListener('load', async () => {
 	await initDataTable()
