@@ -92,6 +92,7 @@ def registro(request):
         form = UserRegistrationForm()
         return render(request, 'registro.html', {'form': form})
 #----------------------------------------TABLA DE LOS USUARIOS ACTIVOS-----------------------------------------------
+@login_required
 def usuariosActivos(request):
     return render(request, 'usuariosActivos.html', {'section': 'usuariosActivos'})
 
@@ -108,6 +109,7 @@ def listarUsuariosActivos(request):
     return JsonResponse(data)
 
 # --------------------------------------OBTENER LOS REGISTROS DEL HISTORIAL------------------------------------------
+@login_required
 def historial(request):
     user_id = request.GET.get('user_id')
     if not user_id:
@@ -132,7 +134,6 @@ def listarRegistros(request, user_id):
     }
     return JsonResponse(data)
 
-
 def crear_registro(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
@@ -149,6 +150,7 @@ def crear_registro(request):
     return JsonResponse({'message': 'Método no permitido', 'success': False}, status=405)
 
 # --------------------------------------------TABLA DE TODOS LOS USUARIOS---------------------------------------------
+@login_required
 def todosLosUsuarios(request):
     return render(request, 'todosLosUsuarios.html', {'section': 'todosLosUsuarios'})
 
@@ -195,6 +197,10 @@ def updateUser(request, user_id):
 #-------------------------------------------DESCARGAR PDF TODOS-------------------------------------------------
 def download_all_users_pdf(request):
     data = get_all_users_data_for_pdf()
+
+    if not data:  # Verifica si no hay datos
+        return JsonResponse({'message': 'No hay registros'}, status=400)
+
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="registros_todos_usuarios.pdf"'
     generate_all_users_pdf(data, response)
@@ -323,13 +329,12 @@ def generate_pdf(data, response, month):
     doc.build(elements)
 
 # --------------------------------------------------LOGIN-----------------------------------------------------------
-    
 def procesar_imagen(imagen):
     try:
         # Verificar el tamaño del archivo
         if imagen.size > MAX_IMAGE_SIZE_BYTES:
             raise ValueError("La imagen excede el tamaño máximo permitido")
-        
+
         img = Image.open(imagen)
 
         width, height = img.size
@@ -343,9 +348,8 @@ def procesar_imagen(imagen):
             # Redimensionar la imagen manteniendo la proporción
             img.thumbnail((max_width, max_height))
 
-        img = img.convert('RGB') 
-        
-    
+        img = img.convert('RGB')
+
         output = BytesIO()
         img.save(output, format='JPEG', optimize=True, quality=85)
         output.seek(0)
@@ -354,14 +358,10 @@ def procesar_imagen(imagen):
         imagen = InMemoryUploadedFile(output, 'ImageField', imagen.name, 'image/jpeg', sys.getsizeof(output), None)
 
         return imagen
-        
+
     except UnidentifiedImageError:
         raise ValueError("El archivo no es una imagen válida")
-    
-# def eliminar_imagen(ruta_imagen):
-#     if os.path.exists(ruta_imagen):
-#         os.remove(ruta_imagen)
-    
+
 @login_required
 def habitaciones(request):
     habitaciones = Bedrooms.objects.filter(deleted_at__isnull=True)
@@ -377,21 +377,20 @@ def habitaciones(request):
 
     return render(request, 'habitaciones.html', {'habitaciones': habitaciones, 'estados': estados})
 
-@login_required
 def guardar_cambios(request):
     if request.method == 'POST':
         # Obtener el ID de la habitación y el nuevo estado enviado desde el formulario
         habitacion_id = request.POST.get('habitacion_id')
         nuevo_estado_id = request.POST.get('estado_habitacion')
-        
+
         # Obtener la habitación y el nuevo estado de la base de datos
         habitacion = Bedrooms.objects.get(id_bedroom=habitacion_id)
         nuevo_estado = States.objects.get(id_state=nuevo_estado_id)
-        
+
         # Actualizar el estado de la habitación
         habitacion.id_state = nuevo_estado
         habitacion.save()
-        
+
         # Devolver el estado actualizado de la habitación
         data = {
             'id_bedroom': habitacion.id_bedroom,
@@ -400,8 +399,7 @@ def guardar_cambios(request):
         return JsonResponse(data)
     else:
         return JsonResponse({'error': 'La solicitud debe ser de tipo POST.'})
-    
-@login_required
+
 def crear_habitacion(request):
     if request.method == 'POST':
         nombre_habitacion = request.POST.get('nombre_habitacion')
@@ -415,10 +413,10 @@ def crear_habitacion(request):
             habitacion.save()
 
             return JsonResponse({'mensaje': 'Habitación creada exitosamente'})
-        
+
         except ValueError as e:
             return JsonResponse({'error': str(e), 'excede_tamano': True}, status=400)
-    
+
 
     return JsonResponse({'error': 'Método no permitido'}, status=405)
 
@@ -434,15 +432,14 @@ def eliminar_imagen(habitacion_id):
         print(f"La imagen {ruta_imagen} ha sido eliminada correctamente.")
     else:
         print(f"La imagen {ruta_imagen} no existe.")
-    
-@login_required
+
 def eliminar_habitacion(request, habitacion_id):
     try:
         habitacion = Bedrooms.objects.get(id_bedroom=habitacion_id)
         habitacion.deleted_at = timezone.now()
         # eliminar_imagen(habitacion_id)
         registros_habitacion = Registers.objects.filter(id_bedroom=habitacion_id)
-        
+
         # Obtener el estado de usuario inactivo (estado 2)
         estado_inactivo = States.objects.get(id_state=2)
 
@@ -459,7 +456,7 @@ def eliminar_habitacion(request, habitacion_id):
         return JsonResponse({'error': 'La habitación no existe'}, status=404)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
-    
+
 @login_required
 def detalle_habitacion(request, habitacion_id):
     habitacion = Bedrooms.objects.get(id_bedroom=habitacion_id)
@@ -479,7 +476,6 @@ def detalle_habitacionJson(request, habitacion_id):
         }
     return JsonResponse(data)
 
-@login_required
 def update_habitacion(request, habitacion_id):
     if request.method == "POST":
         try:
@@ -499,7 +495,7 @@ def update_habitacion(request, habitacion_id):
         if 'foto_habitacion' in request.FILES:
             try:
                 nueva_foto = request.FILES['foto_habitacion']
-                
+
                 nueva_foto = procesar_imagen(nueva_foto)
                 eliminar_imagen(habitacion_id)
 
@@ -519,17 +515,18 @@ def update_habitacion(request, habitacion_id):
     else:
         return JsonResponse({'error': 'Método no permitido'}, status=405)
 
+# ------------------------------------------------LOGIN-----------------------------------------------------
 def login(request):
     if request.method == 'POST':
         form = CustomAuthenticationForm(request, data=request.POST)
         if form.is_valid():
             auth_login(request, form.get_user())
-            return HttpResponseRedirect(reverse('inicio'))  
+            return HttpResponseRedirect(reverse('inicio'))
         else:
             username = form.cleaned_data.get('username')
             if username:
                 if request.session.get('login_attempts', 0) >= 5:
-                 
+
                     pass
                 else:
                     request.session['login_attempts'] = request.session.get('login_attempts', 0) + 1
@@ -543,6 +540,7 @@ def login(request):
     return render(request, 'login.html', {'form': form})
 
 #-----------------------------------------------------LOGOUT----------------------------------------------------------
+@login_required
 def logout(request):
     auth_logout(request)
-    return HttpResponseRedirect(reverse('login'))  
+    return HttpResponseRedirect(reverse('login'))

@@ -469,18 +469,39 @@ $(document).ready(async () => {
 		// Verificar si se ha seleccionado "Todos"
 		if (selectedMonth === '0') {
 			const url = '/download_all_users_pdf/'
-			window.location.href = url
-		} else {
-			// Realizar la descarga del PDF para el mes seleccionado
-			const url = '/descargar_pdf/?selected_month=' + selectedMonth
-			// Realizar la solicitud AJAX
 			$.get(url)
-				.done(function (response) {
-					// Si hay datos, descargar el PDF
+				.done(function () {
 					window.location.href = url
 				})
 				.fail(function (xhr) {
-					// Si no hay datos, mostrar la alerta Swal
+					if (
+						xhr.status === 400 &&
+						xhr.responseJSON &&
+						xhr.responseJSON.message === 'No hay registros'
+					) {
+						Swal.fire({
+							icon: 'warning',
+							title: 'No hay registros',
+							text: 'No hay usuarios registrados',
+							confirmButtonText: 'OK'
+						})
+					} else {
+						Swal.fire({
+							icon: 'error',
+							title: 'Error',
+							text: 'Ha ocurrido un error. Inténtalo de nuevo más tarde',
+							confirmButtonText: 'OK'
+						})
+					}
+				})
+		} else {
+			// Realizar la descarga del PDF para el mes seleccionado
+			const url = '/descargar_pdf/?selected_month=' + selectedMonth
+			$.get(url)
+				.done(function () {
+					window.location.href = url
+				})
+				.fail(function (xhr) {
 					if (xhr.status === 400) {
 						Swal.fire({
 							icon: 'warning',

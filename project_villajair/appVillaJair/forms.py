@@ -128,7 +128,7 @@ class UserRegistrationForm(forms.ModelForm):
             bedroom = Bedrooms.objects.get(id_bedroom=bedroom_id)
             check_in_date = self.cleaned_data['check_in_date']
             check_out_date = self.cleaned_data['check_out_date']
-            Registers.objects.create(id_user=existing_user, id_bedroom=bedroom, check_in_date=check_in_date, check_out_date=check_out_date)
+            Registers.objects.create(id_user=existing_user, id_bedroom=bedroom, check_in_date=check_in_date,check_out_date=check_out_date)
 
             bedroom.update_room_status()  # Actualizar el estado de la habitación
 
