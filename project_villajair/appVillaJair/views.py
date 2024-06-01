@@ -23,6 +23,7 @@ from django.db.models import F
 from django.http import Http404
 from django.core.exceptions import ValidationError
 from django.db.models import Max
+from django.contrib.auth.models import User
 
 #-----------------------------------------------------HOME------------------------------------------------------
 from django.http import JsonResponse
@@ -43,11 +44,6 @@ MAX_IMAGE_SIZE_BYTES = 10 * 1024 * 1024  # Tamaño máximo permitido en bytes (1
 
 @login_required
 def inicio(request):
-    # global tarea_iniciada
-    # if not tarea_iniciada:
-    #     iniciar_tarea_actualizacion()
-    #     iniciar_tarea_actualizacion_habitaciones()
-    #     tarea_iniciada = True
     return render(request, 'inicio.html')
 
 #-------------------------------------------------REGISTRO--------------------------------------------------------
@@ -521,20 +517,32 @@ def login(request):
         form = CustomAuthenticationForm(request, data=request.POST)
         if form.is_valid():
             auth_login(request, form.get_user())
+            # Si el usuario se autentica correctamente, restablecer el contador de intentos de inicio de sesión
+            request.session['login_attempts'] = 0
             return HttpResponseRedirect(reverse('inicio'))
         else:
-            username = form.cleaned_data.get('username')
-            if username:
-                if request.session.get('login_attempts', 0) >= 5:
-
-                    pass
+            # Si las credenciales son incorrectas, incrementar el contador de intentos de inicio de sesión
+            request.session['login_attempts'] = request.session.get('login_attempts', 0) + 1
+            # Si el usuario ha superado los 3 intentos permitidos, bloquear la cuenta del usuario
+            if request.session.get('login_attempts', 0) >= 5:
+                # Obtener el nombre de usuario del formulario
+                username = form.cleaned_data.get('username')
+                if username:
+                    try:
+                        user = User.objects.get(username=username)
+                        # Desactivar la cuenta del usuario
+                        user.is_active = False
+                        user.save()
+                        messages.error(request, "Has excedido el número máximo de intentos de inicio de sesión. Tu cuenta ha sido bloqueada. Por favor, contacta al administrador.")
+                    except User.DoesNotExist:
+                        messages.error(request, "Las credenciales son incorrectas y no se pudo encontrar el usuario.")
                 else:
-                    request.session['login_attempts'] = request.session.get('login_attempts', 0) + 1
-
-            form = CustomAuthenticationForm()
-
-            messages.error(request, "Credenciales incorrectas. Inténtalo de nuevo.")
-            return render(request, 'login.html', {'form': form})
+                    messages.error(request, "Las credenciales son incorrectas y no se pudo encontrar el usuario.")
+                return render(request, 'login.html', {'form': form})
+            else:
+                # Si el usuario aún tiene intentos restantes, mostrar un mensaje de error y volver a renderizar el formulario de inicio de sesión
+                messages.error(request, "Credenciales incorrectas. Inténtalo de nuevo.")
+                return render(request, 'login.html', {'form': form})
     else:
         form = CustomAuthenticationForm()
     return render(request, 'login.html', {'form': form})
