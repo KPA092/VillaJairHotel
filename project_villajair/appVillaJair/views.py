@@ -433,7 +433,10 @@ def eliminar_habitacion(request, habitacion_id):
     try:
         habitacion = Bedrooms.objects.get(id_bedroom=habitacion_id)
         habitacion.deleted_at = timezone.now()
-        # eliminar_imagen(habitacion_id)
+
+        # Eliminar la imagen de la habitación
+        eliminar_imagen(habitacion_id)
+
         registros_habitacion = Registers.objects.filter(id_bedroom=habitacion_id)
 
         # Obtener el estado de usuario inactivo (estado 2)
@@ -444,14 +447,15 @@ def eliminar_habitacion(request, habitacion_id):
             usuario = registro.id_user
             usuario.id_state = estado_inactivo  # Cambiar estado del usuario a 2 (estado inactivo)
             usuario.save()
+
         habitacion.save()
-        print(usuario)
 
         return JsonResponse({'mensaje': 'Habitación eliminada correctamente'})
     except Bedrooms.DoesNotExist:
         return JsonResponse({'error': 'La habitación no existe'}, status=404)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+
 
 @login_required
 def detalle_habitacion(request, habitacion_id):
