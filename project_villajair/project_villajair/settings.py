@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-9^hx@kyr+u&ig57av2$(5$4x8r%sk3h-fh)3^#7l&b7n7c&1^%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['www.VillaJair.com', 'VillaJair.com', '192.168.246.179']
 
 
 # Application definition
@@ -161,5 +161,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False 
 EMAIL_HOST_USER = 'villajairhotel1@gmail.com'
 EMAIL_HOST_PASSWORD = 'ukloggqveelysbrd'
+DEFAULT_FROM_EMAIL = 'villajairhotel1@gmail.com'

@@ -242,9 +242,7 @@ const listUsersByMonth = async (year, month) => {
 			return
 		}
 
-		const response = await fetch(
-			`http://127.0.0.1:8000/listarUsuariosPorMes/${year}/${month}/`
-		)
+		const response = await fetch(`/listarUsuariosPorMes/${year}/${month}/`)
 		const data = await response.json()
 
 		const filteredData = data.users
@@ -293,9 +291,7 @@ const initDataTable = async () => {
 
 const listUsers = async () => {
 	try {
-		const response = await fetch(
-			'http://127.0.0.1:8000/listarTodosLosUsuarios/'
-		)
+		const response = await fetch('/listarTodosLosUsuarios/')
 		const data = await response.json()
 
 		const tableBody = document.getElementById('tablebody_users')

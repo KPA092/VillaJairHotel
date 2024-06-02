@@ -198,12 +198,9 @@ document.addEventListener('DOMContentLoaded', function () {
 								alert('Hubo un error al actualizar la habitación.')
 							}
 						} else {
-							const card = document
-								.querySelector(`div[data-habitacion-id="${habitacionId}"]`)
-								.closest('.habitacion')
-							card.querySelector('.card-header').textContent = data.bedroom_name
-							card.querySelector('.habitacion-imagen-individual img').src =
-								data.photo_url
+							const card = document.querySelector(`div[data-habitacion-id="${habitacionId}"]`).closest('.habitacion')
+							card.querySelector('.card-header').textContent = data.bedroom_name;
+							card.querySelector('.habitacion-imagen-individual img').src = data.photo_url;
 							const limitPersonElement = document.getElementById('limit_person')
 							if (limitPersonElement) {
 								limitPersonElement.innerHTML = `<p><strong> Limite de Personas: </strong> ${data.people_limit}</p>`

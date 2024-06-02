@@ -238,19 +238,22 @@ const dataTableOptions = {
 	}
 }
 
-
 const listaRegistros = async userId => {
-    try {
-        const response = await fetch(
-            `http://127.0.0.1:8000/listarRegistros/${userId}`
-        )
-        const data = await response.json()
+	try {
+		const response = await fetch(`/listarRegistros/${userId}`)
+		const data = await response.json()
 
-        let content = ``
-        data.registros.forEach((register, index) => {
-            const checkInDate = moment.utc(register.check_in_date).tz('America/Bogota').format('YYYY-MM-DD HH:mm');
-            const checkOutDate = moment.utc(register.check_out_date).tz('America/Bogota').format('YYYY-MM-DD HH:mm');
-            content += `
+		let content = ``
+		data.registros.forEach((register, index) => {
+			const checkInDate = moment
+				.utc(register.check_in_date)
+				.tz('America/Bogota')
+				.format('YYYY-MM-DD HH:mm')
+			const checkOutDate = moment
+				.utc(register.check_out_date)
+				.tz('America/Bogota')
+				.format('YYYY-MM-DD HH:mm')
+			content += `
                 <tr>
                     <td>${index + 1}</td>
                     <td>${checkInDate}</td>
@@ -258,11 +261,11 @@ const listaRegistros = async userId => {
                     <td>${register.bedroom_name}</td>
                 </tr>
             `
-        })
-        tablebody_registers.innerHTML = content
-    } catch (ex) {
-        alert(ex)
-    }
+		})
+		tablebody_registers.innerHTML = content
+	} catch (ex) {
+		alert(ex)
+	}
 }
 
 const initDataTable = async () => {
@@ -275,7 +278,6 @@ const initDataTable = async () => {
 
 	dataTablaIsInitialized = true
 }
-
 
 window.addEventListener('load', async () => {
 	await initDataTable()
@@ -304,12 +306,14 @@ document.addEventListener('DOMContentLoaded', function () {
 					})
 					await initDataTable()
 				} else if (!data.success) {
-					let errorMessages = Object.values(data.errors || {message: data.message}).join('\n')
-                    await Swal.fire({
-                        icon: 'error',
-                        title: '¡Error!',
-                        text: errorMessages
-                    })
+					let errorMessages = Object.values(
+						data.errors || { message: data.message }
+					).join('\n')
+					await Swal.fire({
+						icon: 'error',
+						title: '¡Error!',
+						text: errorMessages
+					})
 				}
 			} else if (data.errors) {
 				let errorMessages = Object.values(data.errors).join('\n')
